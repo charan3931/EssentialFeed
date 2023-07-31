@@ -36,8 +36,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
     func test_load_DeliversErrorOnCLientError() {
-        let url = URL(string: "https://a-AnyGivenURL.com")!
-        let (sut, client) = makeSUT(url: url)
+        let (sut, client) = makeSUT()
 
         expect(sut, toCompleteWithResult: .failure(.connectivity), when: {
             let clientError = NSError(domain: "Test", code: 0)
@@ -46,8 +45,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
     func test_load_DeliversErrorOnNon200ResponseError() {
-        let url = URL(string: "https://a-AnyGivenURL.com")!
-        let (sut, client) = makeSUT(url: url)
+        let (sut, client) = makeSUT()
 
         let samples = [199, 201, 300, 400, 500]
         samples.enumerated().forEach { index, statusCode in
@@ -59,8 +57,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
     func test_load_DeliversErrorOn200ResponseWithInvalidData() {
-        let url = URL(string: "https://a-AnyGivenURL.com")!
-        let (sut, client) = makeSUT(url: url)
+        let (sut, client) = makeSUT()
 
         expect(sut, toCompleteWithResult: .failure(.invalidData), when: {
             let invalidJSONData = Data("Invalid JSON Data".utf8)
@@ -69,8 +66,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
     func test_load_DeliversEmptyFeedItemsOn200ResponseWithEmptyJSON() {
-        let url = URL(string: "https://a-AnyGivenURL.com")!
-        let (sut, client) = makeSUT(url: url)
+        let (sut, client) = makeSUT()
 
         expect(sut, toCompleteWithResult: .success([]), when: {
             let emptyListJSON = makeItemsJSON([])
@@ -79,8 +75,7 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
     func test_load_DeliversFeedItemsOn200ResponseWithValidJSON() {
-        let url = URL(string: "https://a-AnyGivenURL.com")!
-        let (sut, client) = makeSUT(url: url)
+        let (sut, client) = makeSUT()
 
         let (item1, item1JSON)  = makeItem(
             id: UUID(),
@@ -88,7 +83,6 @@ final class RemoteFeedLoaderTests: XCTestCase {
             location: nil,
             imageURL: URL(string: "http://a-url.com")!
         )
-
         let (item2, item2JSON)  = makeItem(
             id: UUID(),
             description: "a description",
@@ -140,10 +134,8 @@ final class RemoteFeedLoaderTests: XCTestCase {
     }
 
     class HTTPClientSpy: HTTPClient {
-        var requestedURLs: [URL] {
-            messages.map { $0.url }
-        }
         private var messages = [(url: URL, completion: (HTTPClientResult) -> Void)]()
+        var requestedURLs: [URL] { messages.map { $0.url } }
 
         func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
             messages.append((url, completion))
