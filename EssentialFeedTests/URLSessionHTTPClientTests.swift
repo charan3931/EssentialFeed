@@ -43,6 +43,24 @@ final class URLSessionHTTPClientTests: XCTestCase {
         URLProtocol.unregisterClass(URLProtocolStub.self)
     }
 
+    func test_get_DeliversErrorOnConnectivityIssue() {
+        let sut = URLSessionHTTPClient()
+        let url = URL(string: "https://any-url.com")!
+        let expectedError = NSError(domain: "any error", code: 0)
+
+        sut.get(from: url, completion: { result in
+            switch result {
+
+            case .success(_, _):
+                XCTFail("should deliver failure but instead delivered success")
+            case .failure(let receivedError):
+                XCTAssertEqual(receivedError as NSError, expectedError)
+            }
+        })
+    }
+
+    //MARK: Helpers
+    
     class URLProtocolStub: URLProtocol {
 
         static var stub = [URL]()
@@ -63,7 +81,6 @@ final class URLSessionHTTPClientTests: XCTestCase {
 
         override func stopLoading() {}
     }
-
 }
 
 
