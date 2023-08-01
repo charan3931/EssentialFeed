@@ -27,6 +27,20 @@ class URLSessionHTTPClient: HTTPClient {
 
 final class URLSessionHTTPClientTests: XCTestCase {
 
+    func test_getFromURL_requestFromURL() {
+        URLProtocol.registerClass(URLProtocolStub.self)
+        let sut = URLSessionHTTPClient()
+        let url = URL(string: "https://any-url.com")!
+        URLProtocolStub.observeRequest = { request in
+            XCTAssertEqual(request.url, url)
+            XCTAssertEqual(request.httpMethod, "GET")
+        }
+
+        sut.get(from: url, completion: { _ in })
+
+        URLProtocol.unregisterClass(URLProtocolStub.self)
+    }
+
     func test_getFromURL_failsOnRequestError() {
         URLProtocol.registerClass(URLProtocolStub.self)
 
@@ -56,6 +70,8 @@ final class URLSessionHTTPClientTests: XCTestCase {
 
         private static var stubs = [URL: Stub]()
 
+        static var observeRequest: ((URLRequest) -> Void)?
+
         private struct Stub {
             let data: Data?
             let response: URLResponse?
@@ -67,6 +83,7 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
 
         override class func canInit(with request: URLRequest) -> Bool {
+            observeRequest?(request)
             return true
         }
 
