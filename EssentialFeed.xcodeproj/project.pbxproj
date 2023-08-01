@@ -17,6 +17,7 @@
 		0A7EDD8B2A767F250038D842 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD8A2A767F250038D842 /* RemoteFeedLoader.swift */; };
 		0A7EDD8E2A77C90C0038D842 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD8D2A77C90C0038D842 /* HTTPClient.swift */; };
 		0A7EDD902A77C95F0038D842 /* FeedItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD8F2A77C95F0038D842 /* FeedItemsMapper.swift */; };
+		0A7EDD922A79332D0038D842 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD912A79332D0038D842 /* URLSessionHTTPClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		0A7EDD8C2A77B2E00038D842 /* EssentialFeed.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeed.xctestplan; sourceTree = "<group>"; };
 		0A7EDD8D2A77C90C0038D842 /* HTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
 		0A7EDD8F2A77C95F0038D842 /* FeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemsMapper.swift; sourceTree = "<group>"; };
+		0A7EDD912A79332D0038D842 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +100,7 @@
 			children = (
 				0A7EDD752A7634970038D842 /* EssentialFeedTests.swift */,
 				0A7EDD872A764A760038D842 /* RemoteFeedLoaderTests.swift */,
+				0A7EDD912A79332D0038D842 /* URLSessionHTTPClientTests.swift */,
 			);
 			path = EssentialFeedTests;
 			sourceTree = "<group>";
@@ -245,6 +248,7 @@
 			files = (
 				0A7EDD882A764A760038D842 /* RemoteFeedLoaderTests.swift in Sources */,
 				0A7EDD762A7634970038D842 /* EssentialFeedTests.swift in Sources */,
+				0A7EDD922A79332D0038D842 /* URLSessionHTTPClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
