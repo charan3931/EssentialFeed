@@ -18,8 +18,8 @@ class URLSessionHTTPClient: HTTPClient {
 
     func get(from url: URL, completion: @escaping (EssentialFeed.HTTPClientResult) -> Void) {
         session.dataTask(with: URLRequest(url: url), completionHandler: { _,_, error  in
-            if let error {
-                completion(.failure(error))
+            if let receivedError = error {
+                completion(.failure(receivedError))
             }
         }).resume()
     }
@@ -27,46 +27,46 @@ class URLSessionHTTPClient: HTTPClient {
 
 final class URLSessionHTTPClientTests: XCTestCase {
 
-    func test_get_requestsWithCorrectURL() {
+    func test_getFromURL_failsOnRequestError() {
         URLProtocol.registerClass(URLProtocolStub.self)
 
         let sut = URLSessionHTTPClient()
         let url = URL(string: "https://any-url.com")!
+        let expectedError = NSError(domain: "any error", code: 0)
+        URLProtocolStub.stub(url: url, data: nil, response: nil, error: expectedError)
 
         let exp = expectation(description: "wait for completion")
-        sut.get(from: url, completion: { _ in
+        sut.get(from: url, completion: { result in
+            switch result {
+            case .failure(let receivedError as NSError):
+                XCTAssertEqual(receivedError.domain, expectedError.domain)
+                XCTAssertEqual(receivedError.code, expectedError.code)
+            default:
+                XCTFail("expected error \(expectedError) but got \(result)")
+            }
             exp.fulfill()
         })
-
         wait(for: [exp], timeout: 1.0)
-        XCTAssertEqual(URLProtocolStub.stub, [url])
         URLProtocol.unregisterClass(URLProtocolStub.self)
     }
 
-    func test_get_DeliversErrorOnConnectivityIssue() {
-        let sut = URLSessionHTTPClient()
-        let url = URL(string: "https://any-url.com")!
-        let expectedError = NSError(domain: "any error", code: 0)
-
-        sut.get(from: url, completion: { result in
-            switch result {
-
-            case .success(_, _):
-                XCTFail("should deliver failure but instead delivered success")
-            case .failure(let receivedError):
-                XCTAssertEqual(receivedError as NSError, expectedError)
-            }
-        })
-    }
-
     //MARK: Helpers
-    
+
     class URLProtocolStub: URLProtocol {
 
-        static var stub = [URL]()
+        private static var stubs = [URL: Stub]()
+
+        private struct Stub {
+            let data: Data?
+            let response: URLResponse?
+            let error: Error?
+        }
+
+        static func stub(url: URL, data: Data?, response: URLResponse?, error: Error?) {
+            stubs[url] = Stub(data: data, response: response, error: error)
+        }
 
         override class func canInit(with request: URLRequest) -> Bool {
-            stub.append(request.url!)
             return true
         }
 
@@ -75,7 +75,20 @@ final class URLSessionHTTPClientTests: XCTestCase {
         }
 
         override func startLoading() {
-            client?.urlProtocol(self, didFailWithError: NSError(domain: "any error", code: 0))
+            guard let url = request.url, let stub = URLProtocolStub.stubs[url] else { return }
+
+            if let data = stub.data {
+                client?.urlProtocol(self, didLoad: data)
+            }
+
+            if let response = stub.response {
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+            }
+
+            if let error = stub.error {
+                client?.urlProtocol(self, didFailWithError: error)
+            }
+
             client?.urlProtocolDidFinishLoading(self)
         }
 
