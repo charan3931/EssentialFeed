@@ -13,12 +13,16 @@ public class URLSessionHTTPClient: HTTPClient {
         self.session = session
     }
 
+    private struct UnwantedError: Swift.Error {}
+
     public func get(from url: URL, completion: @escaping (EssentialFeed.HTTPClientResult) -> Void) {
         session.dataTask(with: URLRequest(url: url), completionHandler: { data, response, error  in
             if let receivedError = error {
                 completion(.failure(receivedError))
             } else if let data = data, let response = response as? HTTPURLResponse {
                 completion(.success(data, response))
+            } else {
+                completion(.failure(UnwantedError()))
             }
         }).resume()
     }
