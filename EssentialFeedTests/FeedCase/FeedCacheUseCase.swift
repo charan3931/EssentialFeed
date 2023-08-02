@@ -76,7 +76,7 @@ final class FeedCacheUseCase: XCTestCase {
         let timestamp = Date()
 
         sut.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp, completion: { _ in })
-        store.completeDeletion(with: NSError(domain: "any Error", code: 0))
+        store.completeDeletion(with: anyError())
 
         XCTAssertEqual(store.receivedMessages, [.deletion])
     }
@@ -94,33 +94,21 @@ final class FeedCacheUseCase: XCTestCase {
 
     func test_save_deliveryErrorOnDeletionError() {
         let (sut, store) = makeSUT()
-        let expectedError = NSError(domain: "any Error", code: 0)
-        let timestamp = Date()
+        let expectedError = anyError()
 
-        let exp = expectation(description: "wait for ccompletion")
-        sut.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp) { receivedError in
-            XCTAssertEqual((receivedError! as NSError).code, expectedError.code)
-            XCTAssertEqual((receivedError! as NSError).domain, expectedError.domain)
-            exp.fulfill()
-        }
-        store.completeDeletion(with: expectedError)
-        wait(for: [exp], timeout: 1.0)
+        expect(sut: sut, completeWithError: expectedError, when: {
+            store.completeDeletion(with: expectedError)
+        })
     }
 
     func test_save_deliveryErrorOnInsertionError() {
         let (sut, store) = makeSUT()
-        let expectedError = NSError(domain: "any Error", code: 0)
-        let timestamp = Date()
+        let expectedError = anyError()
 
-        let exp = expectation(description: "wait for ccompletion")
-        sut.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp) { receivedError in
-            XCTAssertEqual((receivedError! as NSError).code, expectedError.code)
-            XCTAssertEqual((receivedError! as NSError).domain, expectedError.domain)
-            exp.fulfill()
-        }
-        store.completeDeletionSuccessfully()
-        store.completeInsertion(with: expectedError)
-        wait(for: [exp], timeout: 1.0)
+        expect(sut: sut, completeWithError: expectedError, when: {
+            store.completeDeletionSuccessfully()
+            store.completeInsertion(with: expectedError)
+        })
     }
 
     //MARK: Helpers
@@ -133,11 +121,29 @@ final class FeedCacheUseCase: XCTestCase {
         return (sut, store)
     }
 
+    func expect(sut: LocalFeedLoader, completeWithError expectedError: NSError, when action: () -> Void) {
+        let timestamp = Date()
+
+        let exp = expectation(description: "wait for ccompletion")
+        sut.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp) { receivedError in
+            XCTAssertEqual((receivedError! as NSError).code, expectedError.code)
+            XCTAssertEqual((receivedError! as NSError).domain, expectedError.domain)
+            exp.fulfill()
+        }
+        action()
+
+        wait(for: [exp], timeout: 1.0)
+    }
+
     private func uniqueItem() -> FeedItem {
         return FeedItem(id: UUID(), description: "any", location: "any", imageURL: anyURL())
     }
 
     private func anyURL() -> URL {
         URL(string: "https://any-url.com")!
+    }
+
+    private func anyError() -> NSError {
+        NSError(domain: "any Error", code: 0)
     }
 }
