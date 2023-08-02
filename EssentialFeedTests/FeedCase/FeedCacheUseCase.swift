@@ -63,10 +63,10 @@ final class FeedCacheUseCase: XCTestCase {
 
     func test_save_doesNotInsertDataOnDeletionError() {
         let (sut, store) = makeSUT()
-        store.completeDeletion(with: NSError(domain: "any Error", code: 0))
         let timestamp = Date()
 
         sut.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp)
+        store.completeDeletion(with: NSError(domain: "any Error", code: 0))
 
         XCTAssertEqual(store.receivedMessages, [.deletion])
     }
