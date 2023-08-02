@@ -22,9 +22,15 @@ class LocalFeedLoader {
 
 class FeedStore {
     var deletionCount = 0
+    private var error: Error?
 
     func deleteCache() {
+        if let error { return }
         deletionCount += 1
+    }
+
+    func complete(with error: NSError) {
+        self.error = error
     }
 }
 
@@ -44,5 +50,15 @@ final class FeedCacheUseCase: XCTestCase {
         sut.save()
 
         XCTAssertTrue(store.deletionCount == 1)
+    }
+
+    func test_save_doesNotDeleteCacheOnDeletionError() {
+        let store = FeedStore()
+        let sut = LocalFeedLoader(store: store)
+        store.complete(with: NSError(domain: "any Error", code: 0))
+
+        sut.save()
+
+        XCTAssertTrue(store.deletionCount == 0)
     }
 }
