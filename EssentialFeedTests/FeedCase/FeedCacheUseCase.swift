@@ -61,6 +61,10 @@ class FeedStore {
     func completeInsertion(with error: NSError) {
         insertionCompletion?(error)
     }
+
+    func completeInsertionSuccessfully() {
+        insertionCompletion?(nil)
+    }
 }
 
 final class FeedCacheUseCase: XCTestCase {
@@ -109,6 +113,20 @@ final class FeedCacheUseCase: XCTestCase {
             store.completeDeletionSuccessfully()
             store.completeInsertion(with: expectedError)
         })
+    }
+
+    func test_save_deliversNoErrorOnSuccessfulInsertion() {
+        let (sut, store) = makeSUT()
+        let timestamp = Date()
+
+        let exp = expectation(description: "wait for ccompletion")
+        sut.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp) { receivedError in
+            XCTAssertNil(receivedError)
+            exp.fulfill()
+        }
+        store.completeDeletionSuccessfully()
+        store.completeInsertionSuccessfully()
+        wait(for: [exp], timeout: 1.0)
     }
 
     //MARK: Helpers
