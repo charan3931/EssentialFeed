@@ -16,10 +16,10 @@ class LocalFeedLoader {
         self.store = store
     }
 
-    func save(items: [FeedItem]) {
+    func save(items: [FeedItem], timestamp: Date) {
         store.deleteCache() { [unowned self] error in
             if error == nil {
-                self.store.insert(items)
+                self.store.insert(items, timestamp: timestamp)
             }
         }
     }
@@ -32,7 +32,7 @@ class FeedStore {
 
     enum ReceivedMessage: Equatable {
         case deletion
-        case insertion([FeedItem])
+        case insertion([FeedItem], Date)
     }
 
     func deleteCache(completion: @escaping DeletionCompletion) {
@@ -40,8 +40,8 @@ class FeedStore {
         receivedMessages.append(.deletion)
     }
 
-    func insert(_ items: [FeedItem]) {
-        receivedMessages.append(.insertion(items))
+    func insert(_ items: [FeedItem], timestamp: Date) {
+        receivedMessages.append(.insertion(items, timestamp))
     }
 
     func completeDeletion(with error: NSError) {
@@ -64,20 +64,22 @@ final class FeedCacheUseCase: XCTestCase {
     func test_save_doesNotInsertDataOnDeletionError() {
         let (sut, store) = makeSUT()
         store.completeDeletion(with: NSError(domain: "any Error", code: 0))
+        let timestamp = Date()
 
-        sut.save(items: [uniqueItem(), uniqueItem()])
+        sut.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp)
 
         XCTAssertEqual(store.receivedMessages, [.deletion])
     }
 
-    func test_save_insertFeedItemsOnSuccessfulDeletion() {
+    func test_save_insertFeedItemsWithTimeStampOnSuccessfulDeletion() {
         let (sut, store) = makeSUT()
         let items = [uniqueItem(), uniqueItem()]
+        let timestamp = Date()
 
-        sut.save(items: items)
+        sut.save(items: items, timestamp: timestamp)
         store.completeDeletionSuccessfully()
 
-        XCTAssertEqual(store.receivedMessages, [.deletion, .insertion(items)])
+        XCTAssertEqual(store.receivedMessages, [.deletion, .insertion(items, timestamp)])
     }
 
     //MARK: Helpers
