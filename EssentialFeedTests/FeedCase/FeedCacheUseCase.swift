@@ -7,6 +7,20 @@
 
 import XCTest
 
+class LocalFeedLoader {
+
+}
+
+class FeedStore {
+    var deletionCount = 0
+}
+
 final class FeedCacheUseCase: XCTestCase {
 
+    func test_init_doesNotDeleteCache() {
+        let sut = LocalFeedLoader()
+        let store = FeedStore()
+
+        XCTAssertTrue(store.deletionCount == 0)
+    }
 }
