@@ -38,15 +38,13 @@ class FeedStore {
 final class FeedCacheUseCase: XCTestCase {
 
     func test_init_doesNotDeleteCache() {
-        let store = FeedStore()
-        let sut = LocalFeedLoader(store: store)
+        let (_, store) = makeSUT()
 
         XCTAssertTrue(store.deletionCount == 0)
     }
 
     func test_save_deletesCache() {
-        let store = FeedStore()
-        let sut = LocalFeedLoader(store: store)
+        let (sut, store) = makeSUT()
 
         sut.save()
 
@@ -54,8 +52,7 @@ final class FeedCacheUseCase: XCTestCase {
     }
 
     func test_save_doesNotDeleteCacheOnDeletionError() {
-        let store = FeedStore()
-        let sut = LocalFeedLoader(store: store)
+        let (sut, store) = makeSUT()
         store.complete(with: NSError(domain: "any Error", code: 0))
 
         sut.save()
@@ -64,12 +61,19 @@ final class FeedCacheUseCase: XCTestCase {
     }
 
     func test_save_doesNotInsertDataOnDeletionError() {
-        let store = FeedStore()
-        let sut = LocalFeedLoader(store: store)
+        let (sut, store) = makeSUT()
         store.complete(with: NSError(domain: "any Error", code: 0))
 
         sut.save()
 
         XCTAssertTrue(store.insertionCount == 0)
+    }
+
+    //MARK: Helpers
+
+    func makeSUT() -> (sut: LocalFeedLoader, store: FeedStore) {
+        let store = FeedStore()
+        let sut = LocalFeedLoader(store: store)
+        return (sut, store)
     }
 }
