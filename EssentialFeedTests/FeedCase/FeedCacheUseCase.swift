@@ -16,8 +16,11 @@ class LocalFeedLoader {
     }
 
     func save() {
-        store.deleteCache()
-        store.insert()
+        store.deleteCache() { [unowned self] error in
+            if error == nil {
+                self.store.insert()
+            }
+        }
     }
 }
 
@@ -26,9 +29,10 @@ class FeedStore {
     var insertionCount = 0
     private var error: Error?
 
-    func deleteCache() {
+    func deleteCache(completion: @escaping (Error?) -> Void) {
         if error != nil { return }
         deletionCount += 1
+        completion(nil)
     }
 
     func insert() {
