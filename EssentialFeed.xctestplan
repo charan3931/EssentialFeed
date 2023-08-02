@@ -9,9 +9,7 @@
     }
   ],
   "defaultOptions" : {
-    "diagnosticCollectionPolicy" : "Always",
-    "testExecutionOrdering" : "random",
-    "threadSanitizerEnabled" : true
+    "testExecutionOrdering" : "random"
   },
   "testTargets" : [
     {
