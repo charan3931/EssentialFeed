@@ -84,6 +84,14 @@ final class FeedCacheUseCase: XCTestCase {
         XCTAssertTrue(store.insertionCount == 0)
     }
 
+    func test_save_insertSuccessOnNoError() {
+        let (sut, store) = makeSUT()
+
+        sut.save()
+
+        XCTAssertTrue(store.insertionCount == 1)
+    }
+
     //MARK: Helpers
 
     func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStore) {
