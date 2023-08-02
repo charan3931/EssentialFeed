@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import EssentialFeed
 
 class LocalFeedLoader {
 
@@ -15,10 +16,10 @@ class LocalFeedLoader {
         self.store = store
     }
 
-    func save() {
+    func save(items: [FeedItem]) {
         store.deleteCache() { [unowned self] error in
             if error == nil {
-                self.store.insert()
+                self.store.insert(items)
             }
         }
     }
@@ -35,7 +36,7 @@ class FeedStore {
         completion(nil)
     }
 
-    func insert() {
+    func insert(_ items: [FeedItem]) {
         if error != nil { return }
         insertionCount += 1
     }
@@ -56,7 +57,7 @@ final class FeedCacheUseCase: XCTestCase {
     func test_save_deletesCache() {
         let (sut, store) = makeSUT()
 
-        sut.save()
+        sut.save(items: [uniqueItem(), uniqueItem()])
 
         XCTAssertTrue(store.deletionCount == 1)
     }
@@ -65,7 +66,7 @@ final class FeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT()
         store.complete(with: NSError(domain: "any Error", code: 0))
 
-        sut.save()
+        sut.save(items: [uniqueItem(), uniqueItem()])
 
         XCTAssertTrue(store.deletionCount == 0)
     }
@@ -74,7 +75,7 @@ final class FeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT()
         store.complete(with: NSError(domain: "any Error", code: 0))
 
-        sut.save()
+        sut.save(items: [uniqueItem(), uniqueItem()])
 
         XCTAssertTrue(store.insertionCount == 0)
     }
@@ -83,7 +84,7 @@ final class FeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT()
         store.complete(with: NSError(domain: "any Error", code: 0))
 
-        sut.save()
+        sut.save(items: [uniqueItem(), uniqueItem()])
 
         XCTAssertTrue(store.insertionCount == 0)
     }
@@ -91,7 +92,15 @@ final class FeedCacheUseCase: XCTestCase {
     func test_save_insertSuccessOnNoError() {
         let (sut, store) = makeSUT()
 
-        sut.save()
+        sut.save(items: [uniqueItem(), uniqueItem()])
+
+        XCTAssertTrue(store.insertionCount == 1)
+    }
+
+    func test_save_insertFeedItemsOnSuccessfulDeletion() {
+        let (sut, store) = makeSUT()
+
+        sut.save(items: [uniqueItem(), uniqueItem()])
 
         XCTAssertTrue(store.insertionCount == 1)
     }
@@ -104,5 +113,13 @@ final class FeedCacheUseCase: XCTestCase {
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
+    }
+
+    private func uniqueItem() -> FeedItem {
+        return FeedItem(id: UUID(), description: "any", location: "any", imageURL: anyURL())
+    }
+
+    private func anyURL() -> URL {
+        URL(string: "https://any-url.com")!
     }
 }
