@@ -150,8 +150,8 @@
 		0A7EDD742A7634970038D842 /* EssentialFeedTests */ = {
 			isa = PBXGroup;
 			children = (
-				0A4D2E022A7AC5AB008A9477 /* FeedCase */,
 				0A4D2DF42A7979AD008A9477 /* Helper */,
+				0A4D2E022A7AC5AB008A9477 /* FeedCase */,
 				0A7EDD752A7634970038D842 /* EssentialFeedTests.swift */,
 				0A7EDD872A764A760038D842 /* RemoteFeedLoaderTests.swift */,
 				0A7EDD912A79332D0038D842 /* URLSessionHTTPClientTests.swift */,
