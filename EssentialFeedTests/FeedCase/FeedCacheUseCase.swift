@@ -17,6 +17,7 @@ class LocalFeedLoader {
 
     func save() {
         store.deleteCache()
+        store.insert()
     }
 }
 
@@ -26,8 +27,13 @@ class FeedStore {
     private var error: Error?
 
     func deleteCache() {
-        if let error { return }
+        if error != nil { return }
         deletionCount += 1
+    }
+
+    func insert() {
+        if error != nil { return }
+        insertionCount += 1
     }
 
     func complete(with error: NSError) {
@@ -61,6 +67,15 @@ final class FeedCacheUseCase: XCTestCase {
     }
 
     func test_save_doesNotInsertDataOnDeletionError() {
+        let (sut, store) = makeSUT()
+        store.complete(with: NSError(domain: "any Error", code: 0))
+
+        sut.save()
+
+        XCTAssertTrue(store.insertionCount == 0)
+    }
+
+    func test_save_doesNotInsertOnInsertionError() {
         let (sut, store) = makeSUT()
         store.complete(with: NSError(domain: "any Error", code: 0))
 
