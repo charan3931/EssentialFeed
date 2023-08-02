@@ -26,23 +26,30 @@ class LocalFeedLoader {
 }
 
 class FeedStore {
-    var deletionCount = 0
-    var insertionCount = 0
-    private var error: Error?
+    typealias DeletionCompletion = (Error?) -> Void
+    var receivedMessages = [ReceivedMessage]()
+    var deletionCompletion: DeletionCompletion?
 
-    func deleteCache(completion: @escaping (Error?) -> Void) {
-        if error != nil { return }
-        deletionCount += 1
-        completion(nil)
+    enum ReceivedMessage: Equatable {
+        case deletion
+        case insertion([FeedItem])
+    }
+
+    func deleteCache(completion: @escaping DeletionCompletion) {
+        deletionCompletion = completion
+        receivedMessages.append(.deletion)
     }
 
     func insert(_ items: [FeedItem]) {
-        if error != nil { return }
-        insertionCount += 1
+        receivedMessages.append(.insertion(items))
     }
 
-    func complete(with error: NSError) {
-        self.error = error
+    func completeDeletion(with error: NSError) {
+        deletionCompletion?(error)
+    }
+
+    func completeDeletionSuccessfully() {
+        deletionCompletion?(nil)
     }
 }
 
@@ -51,58 +58,26 @@ final class FeedCacheUseCase: XCTestCase {
     func test_init_doesNotDeleteCache() {
         let (_, store) = makeSUT()
 
-        XCTAssertTrue(store.deletionCount == 0)
-    }
-
-    func test_save_deletesCache() {
-        let (sut, store) = makeSUT()
-
-        sut.save(items: [uniqueItem(), uniqueItem()])
-
-        XCTAssertTrue(store.deletionCount == 1)
-    }
-
-    func test_save_doesNotDeleteCacheOnDeletionError() {
-        let (sut, store) = makeSUT()
-        store.complete(with: NSError(domain: "any Error", code: 0))
-
-        sut.save(items: [uniqueItem(), uniqueItem()])
-
-        XCTAssertTrue(store.deletionCount == 0)
+        XCTAssertEqual(store.receivedMessages, [])
     }
 
     func test_save_doesNotInsertDataOnDeletionError() {
         let (sut, store) = makeSUT()
-        store.complete(with: NSError(domain: "any Error", code: 0))
+        store.completeDeletion(with: NSError(domain: "any Error", code: 0))
 
         sut.save(items: [uniqueItem(), uniqueItem()])
 
-        XCTAssertTrue(store.insertionCount == 0)
-    }
-
-    func test_save_doesNotInsertOnInsertionError() {
-        let (sut, store) = makeSUT()
-        store.complete(with: NSError(domain: "any Error", code: 0))
-
-        sut.save(items: [uniqueItem(), uniqueItem()])
-
-        XCTAssertTrue(store.insertionCount == 0)
-    }
-
-    func test_save_insertSuccessOnNoError() {
-        let (sut, store) = makeSUT()
-
-        sut.save(items: [uniqueItem(), uniqueItem()])
-
-        XCTAssertTrue(store.insertionCount == 1)
+        XCTAssertEqual(store.receivedMessages, [.deletion])
     }
 
     func test_save_insertFeedItemsOnSuccessfulDeletion() {
         let (sut, store) = makeSUT()
+        let items = [uniqueItem(), uniqueItem()]
 
-        sut.save(items: [uniqueItem(), uniqueItem()])
+        sut.save(items: items)
+        store.completeDeletionSuccessfully()
 
-        XCTAssertTrue(store.insertionCount == 1)
+        XCTAssertEqual(store.receivedMessages, [.deletion, .insertion(items)])
     }
 
     //MARK: Helpers
