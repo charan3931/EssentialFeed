@@ -27,6 +27,7 @@
 		0A7EDD902A77C95F0038D842 /* FeedItemsMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD8F2A77C95F0038D842 /* FeedItemsMapper.swift */; };
 		0A7EDD922A79332D0038D842 /* URLSessionHTTPClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD912A79332D0038D842 /* URLSessionHTTPClientTests.swift */; };
 		0AD667B32A7C0D54004DA90E /* LoadFeedCacheUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD667B22A7C0D54004DA90E /* LoadFeedCacheUseCase.swift */; };
+		0AD667B52A7C0DE3004DA90E /* FeedStoreSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD667B42A7C0DE3004DA90E /* FeedStoreSpy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +69,7 @@
 		0A7EDD8F2A77C95F0038D842 /* FeedItemsMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedItemsMapper.swift; sourceTree = "<group>"; };
 		0A7EDD912A79332D0038D842 /* URLSessionHTTPClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClientTests.swift; sourceTree = "<group>"; };
 		0AD667B22A7C0D54004DA90E /* LoadFeedCacheUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadFeedCacheUseCase.swift; sourceTree = "<group>"; };
+		0AD667B42A7C0DE3004DA90E /* FeedStoreSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStoreSpy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 			children = (
 				0A4D2E032A7AC5CA008A9477 /* SaveFeedCacheUseCase.swift */,
 				0AD667B22A7C0D54004DA90E /* LoadFeedCacheUseCase.swift */,
+				0AD667B42A7C0DE3004DA90E /* FeedStoreSpy.swift */,
 			);
 			path = FeedCase;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				0A7EDD882A764A760038D842 /* RemoteFeedLoaderTests.swift in Sources */,
 				0A7EDD762A7634970038D842 /* EssentialFeedTests.swift in Sources */,
 				0A4D2E042A7AC5CA008A9477 /* SaveFeedCacheUseCase.swift in Sources */,
+				0AD667B52A7C0DE3004DA90E /* FeedStoreSpy.swift in Sources */,
 				0AD667B32A7C0D54004DA90E /* LoadFeedCacheUseCase.swift in Sources */,
 				0A7EDD922A79332D0038D842 /* URLSessionHTTPClientTests.swift in Sources */,
 			);
