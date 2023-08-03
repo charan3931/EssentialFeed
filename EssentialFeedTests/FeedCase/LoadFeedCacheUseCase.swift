@@ -29,9 +29,14 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let expectedError = anyError()
 
         let exp = expectation(description: "wait for completion")
-        sut.retrieve { error in
-            XCTAssertEqual((error! as NSError).code, expectedError.code)
-            XCTAssertEqual((error! as NSError).domain, expectedError.domain)
+        sut.retrieve { result in
+            switch result {
+            case .failure(let error):
+                XCTAssertEqual((error as NSError).code, expectedError.code)
+                XCTAssertEqual((error as NSError).domain, expectedError.domain)
+            default:
+                XCTFail("expected \(expectedError) but instead got \(result)")
+            }
             exp.fulfill()
         }
         store.completeRetrieval(with: anyError())

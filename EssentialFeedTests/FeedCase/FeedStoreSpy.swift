@@ -52,6 +52,10 @@ class FeedStoreSpy: FeedStore {
     }
 
     func completeRetrieval(with error: NSError) {
-        retrievalCompletion?(error)
+        retrievalCompletion?(.failure(error))
+    }
+
+    func completeRetrievalSuccessful(with images: [LocalFeedImage]) {
+        retrievalCompletion?(.success(images))
     }
 }
