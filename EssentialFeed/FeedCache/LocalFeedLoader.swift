@@ -36,8 +36,8 @@ public class LocalFeedLoader {
         store.retrieve(completion: { result in
             switch result {
 
-            case .success(_):
-                break
+            case .success(let feedImages):
+                completion(.success(feedImages.toModel()))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -51,3 +51,10 @@ private extension Array where Element == FeedImage {
         return map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
     }
 }
+
+private extension Array where Element == LocalFeedImage {
+    func toModel() -> [FeedImage] {
+        return map { FeedImage(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
+    }
+}
+
