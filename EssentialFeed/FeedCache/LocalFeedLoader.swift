@@ -8,7 +8,6 @@
 import Foundation
 
 public class LocalFeedLoader {
-
     private let store: FeedStore
 
     public init(store: FeedStore) {
@@ -27,9 +26,16 @@ public class LocalFeedLoader {
     }
 
     private func cache(_ items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        self.store.insert(items, timestamp: timestamp, completion: { [weak self] error in
+        self.store.insert(items.toLocal(), timestamp: timestamp, completion: { [weak self] error in
             guard self != nil else { return }
             completion(error)
         })
+    }
+}
+
+
+private extension Array where Element == FeedItem {
+    func toLocal() -> [LocalFeedItem] {
+        return map { LocalFeedItem(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
     }
 }
