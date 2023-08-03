@@ -1,5 +1,5 @@
 //
-//  FeedCacheUseCase.swift
+//  SaveFeedCacheUseCase.swift
 //  EssentialFeedTests
 //
 //  Created by Sai Charan on 02/08/23.
@@ -8,7 +8,7 @@
 import XCTest
 import EssentialFeed
 
-final class FeedCacheUseCase: XCTestCase {
+final class SaveFeedCacheUseCase: XCTestCase {
 
     func test_init_doesNotDeleteCache() {
         let (_, store) = makeSUT()
