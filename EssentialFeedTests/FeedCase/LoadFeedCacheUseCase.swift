@@ -19,7 +19,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
     func test_retrieve_messagesStoreToRetrieve() {
         let (sut, store) = makeSUT()
 
-        sut.retrieve() { _ in }
+        sut.retrieve(with: currentDate()) { _ in }
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -28,7 +28,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT()
         let expectedError = anyError()
 
-        expect(sut, completeWith: .failure(expectedError), when: {
+        expect(sut, with: currentDate(), completeWith: .failure(expectedError), when: {
             store.completeRetrieval(with: anyError())
         })
     }
@@ -36,7 +36,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
         let (sut, store) = makeSUT()
 
-        expect(sut, completeWith: .success([]), when: {
+        expect(sut, with: currentDate(), completeWith: .success([]), when: {
             store.completeRetrievalSuccessful(with: [], timestamp: currentDate())
         })
     }
@@ -47,8 +47,19 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let fixedCurrentDate = currentDate()
         let validTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
 
-        expect(sut, completeWith: .success(feed.models), when: {
+        expect(sut, with: fixedCurrentDate, completeWith: .success(feed.models), when: {
             store.completeRetrievalSuccessful(with: feed.local, timestamp: validTimestamp)
+        })
+    }
+
+    func test_load_deliversNoImagesOnTimestampExpired() {
+        let (sut, store) = makeSUT()
+        let feed = uniqueImageFeed()
+        let fixedCurrentDate = Date()
+        let expiredTimestamp = fixedCurrentDate.adding(days: -7)
+
+        expect(sut, with: fixedCurrentDate, completeWith: .success([]), when: {
+            store.completeRetrievalSuccessful(with: feed.local, timestamp: expiredTimestamp)
         })
     }
 
@@ -62,9 +73,9 @@ final class LoadFeedCacheUseCase: XCTestCase {
         return (sut, store)
     }
 
-    private func expect(_ sut: LocalFeedLoader, completeWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedLoader, with currentDate: Date,completeWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "wait for completion")
-        sut.retrieve { receivedResult in
+        sut.retrieve(with: currentDate) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedImages), .success(expectedImages)):
                 XCTAssertEqual(receivedImages, expectedImages, file: file, line: line)

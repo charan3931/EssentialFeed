@@ -32,16 +32,28 @@ public class LocalFeedLoader {
         })
     }
 
-    public func retrieve(completion: @escaping (LoadFeedResult) -> Void) {
-        store.retrieve(completion: { result in
+    public func retrieve(with currentDate: Date, completion: @escaping (LoadFeedResult) -> Void) {
+        store.retrieve(completion: { [unowned self] result in
             switch result {
 
-            case .success(let feedImages, let timestamp):
-                completion(.success(feedImages.toModel()))
+            case .success((let feedImages, let timestamp)):
+                if self.isValid(timestamp, to: currentDate) {
+                    completion(.success(feedImages.toModel()))
+                } else {
+                    completion(.success([]))
+                }
             case .failure(let error):
                 completion(.failure(error))
             }
         })
+    }
+
+    private func isValid(_ timestamp: Date, to currentDate: Date) -> Bool {
+        let calendar = Calendar(identifier: .gregorian)
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: 7, to: timestamp) else {
+            return false
+        }
+        return currentDate < maxCacheAge
     }
 }
 
