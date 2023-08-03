@@ -36,7 +36,7 @@ public class LocalFeedLoader {
         store.retrieve(completion: { result in
             switch result {
 
-            case .success(let feedImages):
+            case .success(let feedImages, let timestamp):
                 completion(.success(feedImages.toModel()))
             case .failure(let error):
                 completion(.failure(error))

@@ -12,7 +12,7 @@ public protocol FeedStore {
     typealias InsertionCompletion = (Error?) -> Void
     typealias RetrievalCompletion = (Result) -> Void
 
-    typealias Result = Swift.Result<[LocalFeedImage], Error>
+    typealias Result = Swift.Result<([LocalFeedImage], timestamp: Date), Error>
 
     func deleteCache(completion: @escaping DeletionCompletion)
     func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion)
