@@ -70,6 +70,21 @@ final class FeedCacheUseCase: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
+    func test_save_doesNotDeliverErrorOnDeletionErrorAfterSUTInstanceDeallocated() {
+        let store = FeedStoreSpy()
+        var sut: LocalFeedLoader? = LocalFeedLoader(store: store)
+        let timestamp = Date()
+
+        var capturedResult = [Error?]()
+        sut?.save(items: [uniqueItem(), uniqueItem()], timestamp: timestamp) { receivedError in
+            capturedResult.append(receivedError)
+        }
+        sut = nil
+        store.completeDeletion(with: anyError())
+
+        XCTAssertTrue(capturedResult.isEmpty)
+    }
+
     //MARK: Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {

@@ -16,7 +16,8 @@ public class LocalFeedLoader {
     }
 
     public func save(items: [FeedItem], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        store.deleteCache() { [unowned self] error in
+        store.deleteCache() { [weak self] error in
+            guard let self else { return }
             if error == nil {
                 self.store.insert(items, timestamp: timestamp, completion: completion)
             } else {
