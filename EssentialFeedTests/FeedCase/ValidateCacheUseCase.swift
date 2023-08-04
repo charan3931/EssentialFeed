@@ -49,7 +49,7 @@ final class ValidateCacheUseCase: XCTestCase {
         let validTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
 
         sut.validateCache() { _ in }
-        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: validTimestamp)
+        store.completeRetrievalSuccessful(with: uniqueFeedImages().local, timestamp: validTimestamp)
         XCTAssertEqual(store.receivedMessages, [.retrieve])
 
     }
@@ -60,7 +60,7 @@ final class ValidateCacheUseCase: XCTestCase {
         let expiredTimestamp = fixedCurrentDate.adding(days: -7)
 
         sut.validateCache() { _ in }
-        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+        store.completeRetrievalSuccessful(with: uniqueFeedImages().local, timestamp: expiredTimestamp)
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deletion])
     }
 
@@ -70,7 +70,7 @@ final class ValidateCacheUseCase: XCTestCase {
         let expiredTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
 
         sut.validateCache() { _ in }
-        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+        store.completeRetrievalSuccessful(with: uniqueFeedImages().local, timestamp: expiredTimestamp)
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deletion])
     }
 
@@ -99,7 +99,7 @@ final class ValidateCacheUseCase: XCTestCase {
         sut?.validateCache { result in
             capturedResult.append(result!)
         }
-        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+        store.completeRetrievalSuccessful(with: uniqueFeedImages().local, timestamp: expiredTimestamp)
         sut = nil
         store.completeDeletion(with: anyError())
 
@@ -114,7 +114,7 @@ final class ValidateCacheUseCase: XCTestCase {
 
         sut?.validateCache { _ in }
         sut = nil
-        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+        store.completeRetrievalSuccessful(with: uniqueFeedImages().local, timestamp: expiredTimestamp)
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -140,36 +140,5 @@ final class ValidateCacheUseCase: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
-    private func anyError() -> NSError {
-        NSError(domain: "any Error", code: 0)
-    }
-
-    private func currentDate() -> Date {
-        Date()
-    }
-    
-    private func uniqueImage() -> FeedImage {
-        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyURL())
-    }
-
-    private func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
-
-    private func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
-        let models = [uniqueImage(), uniqueImage()]
-        let local = models.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
-        return (models, local)
-    }
-}
-
-private extension Date {
-    func adding(days: Int) -> Date {
-        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
-    }
-
-    func adding(seconds: TimeInterval) -> Date {
-        return self + seconds
-    }
 }
 

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0A04116E2A7D24B700442336 /* ValidateCacheUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A04116D2A7D24B700442336 /* ValidateCacheUseCase.swift */; };
 		0A0411702A7D37FE00442336 /* CachePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A04116F2A7D37FE00442336 /* CachePolicy.swift */; };
+		0A0411732A7D398400442336 /* Feedcache+helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0411722A7D398400442336 /* Feedcache+helpers.swift */; };
+		0A0411752A7D39B200442336 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0411742A7D39B200442336 /* Helpers.swift */; };
 		0A4D2DED2A797950008A9477 /* EssentialFeedEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4D2DEC2A797950008A9477 /* EssentialFeedEndToEndTests.swift */; };
 		0A4D2DEE2A797950008A9477 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7EDD662A7634960038D842 /* EssentialFeed.framework */; };
 		0A4D2DF82A797A90008A9477 /* XCTestCase+MemoryTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4D2DF72A797A90008A9477 /* XCTestCase+MemoryTracking.swift */; };
@@ -52,6 +54,8 @@
 /* Begin PBXFileReference section */
 		0A04116D2A7D24B700442336 /* ValidateCacheUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidateCacheUseCase.swift; sourceTree = "<group>"; };
 		0A04116F2A7D37FE00442336 /* CachePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachePolicy.swift; sourceTree = "<group>"; };
+		0A0411722A7D398400442336 /* Feedcache+helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Feedcache+helpers.swift"; sourceTree = "<group>"; };
+		0A0411742A7D39B200442336 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		0A4D2DEA2A797950008A9477 /* EssentialFeedEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialFeedEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A4D2DEC2A797950008A9477 /* EssentialFeedEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialFeedEndToEndTests.swift; sourceTree = "<group>"; };
 		0A4D2DF72A797A90008A9477 /* XCTestCase+MemoryTracking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+MemoryTracking.swift"; sourceTree = "<group>"; };
@@ -103,6 +107,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A0411712A7D395300442336 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				0AD667B42A7C0DE3004DA90E /* FeedStoreSpy.swift */,
+				0A0411722A7D398400442336 /* Feedcache+helpers.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		0A4D2DEB2A797950008A9477 /* EssentialFeedEndToEndTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				0A4D2DF72A797A90008A9477 /* XCTestCase+MemoryTracking.swift */,
+				0A0411742A7D39B200442336 /* Helpers.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -122,9 +136,9 @@
 		0A4D2E022A7AC5AB008A9477 /* FeedCase */ = {
 			isa = PBXGroup;
 			children = (
+				0A0411712A7D395300442336 /* Helpers */,
 				0A4D2E032A7AC5CA008A9477 /* SaveFeedCacheUseCase.swift */,
 				0AD667B22A7C0D54004DA90E /* LoadFeedCacheUseCase.swift */,
-				0AD667B42A7C0DE3004DA90E /* FeedStoreSpy.swift */,
 				0A04116D2A7D24B700442336 /* ValidateCacheUseCase.swift */,
 			);
 			path = FeedCase;
@@ -370,7 +384,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A4D2DF82A797A90008A9477 /* XCTestCase+MemoryTracking.swift in Sources */,
+				0A0411732A7D398400442336 /* Feedcache+helpers.swift in Sources */,
 				0A7EDD882A764A760038D842 /* RemoteFeedLoaderTests.swift in Sources */,
+				0A0411752A7D39B200442336 /* Helpers.swift in Sources */,
 				0A7EDD762A7634970038D842 /* EssentialFeedTests.swift in Sources */,
 				0A4D2E042A7AC5CA008A9477 /* SaveFeedCacheUseCase.swift in Sources */,
 				0A04116E2A7D24B700442336 /* ValidateCacheUseCase.swift in Sources */,

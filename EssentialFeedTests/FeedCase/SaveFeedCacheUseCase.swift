@@ -124,26 +124,4 @@ final class SaveFeedCacheUseCase: XCTestCase {
 
         wait(for: [exp], timeout: 1.0)
     }
-
-    private func uniqueFeedImage() -> FeedImage {
-        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyURL())
-    }
-
-    private func uniqueFeedImages() -> (models: [FeedImage], local: [LocalFeedImage]) {
-        let models = [uniqueFeedImage(), uniqueFeedImage()]
-        let local = models.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
-        return (models, local)
-    }
-
-    private func anyURL() -> URL {
-        URL(string: "https://any-url.com")!
-    }
-
-    private func anyError() -> NSError {
-        NSError(domain: "any Error", code: 0)
-    }
-
-    private func currentDate() -> Date {
-        Date()
-    }
 }
