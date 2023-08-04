@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class LocalFeedLoader {
+public final class LocalFeedLoader {
     private let store: FeedStore
     private let currentDate: () -> Date
 
@@ -16,6 +16,9 @@ public class LocalFeedLoader {
         self.store = store
     }
 
+}
+
+extension LocalFeedLoader {
     public func save(items: [FeedImage], completion: @escaping (Error?) -> Void) {
         store.deleteCache() { [weak self] error in
             guard let self else { return }
@@ -33,6 +36,8 @@ public class LocalFeedLoader {
             completion(error)
         })
     }
+}
+extension LocalFeedLoader {
 
     public func validateCache(completion: @escaping (Error?) -> Void) {
         store.retrieve() { [weak self] result in
@@ -50,7 +55,9 @@ public class LocalFeedLoader {
             }
         }
     }
+}
 
+extension LocalFeedLoader {
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
         store.retrieve(completion: { [weak self] result in
             guard let self else { return }
@@ -70,11 +77,13 @@ public class LocalFeedLoader {
 
     private func isValid(_ timestamp: Date) -> Bool {
         let calendar = Calendar(identifier: .gregorian)
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: 7, to: timestamp) else {
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxAgeDays, to: timestamp) else {
             return false
         }
         return currentDate() < maxCacheAge
     }
+
+    private var maxAgeDays: Int { 7 }
 }
 
 

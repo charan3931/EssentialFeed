@@ -112,7 +112,6 @@ final class ValidateCacheUseCase: XCTestCase {
         var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
         let expiredTimestamp = fixedCurrentDate.adding(days: -7)
 
-        var capturedResult = [Error]()
         sut?.validateCache { _ in }
         sut = nil
         store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
