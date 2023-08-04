@@ -35,12 +35,15 @@ public class LocalFeedLoader {
     }
 
     public func validateCache(completion: @escaping (Error?) -> Void) {
-        store.retrieve() { [unowned self] result in
+        store.retrieve() { [weak self] result in
+            guard let self else { return }
             switch result {
-
             case .success((_, let timestamp)):
                 if !isValid(timestamp) {
-                    self.store.deleteCache(completion: completion)
+                    self.store.deleteCache(completion: { [weak self] error in
+                        guard self != nil else { return }
+                        completion(error)
+                    })
                 }
             case .failure(let error):
                 completion(error)

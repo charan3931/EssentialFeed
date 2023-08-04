@@ -74,6 +74,52 @@ final class ValidateCacheUseCase: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.retrieve, .deletion])
     }
 
+    func test_validateCache_doesNotDeliverErrorOnRetrievalErrorAfterSUTInstanceDeallocated() {
+        let store = FeedStoreSpy()
+        let fixedCurrentDate = currentDate()
+        var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
+
+        var capturedResult = [Error]()
+        sut?.validateCache { result in
+            capturedResult.append(result!)
+        }
+        sut = nil
+        store.completeRetrieval(with: anyError())
+
+        XCTAssertTrue(capturedResult.isEmpty)
+    }
+
+    func test_validateCache_doesNotDeliverErrorOnDeletionErrorAfterSUTInstanceDeallocated() {
+        let store = FeedStoreSpy()
+        let fixedCurrentDate = currentDate()
+        var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
+        let expiredTimestamp = fixedCurrentDate.adding(days: -7)
+
+        var capturedResult = [Error]()
+        sut?.validateCache { result in
+            capturedResult.append(result!)
+        }
+        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+        sut = nil
+        store.completeDeletion(with: anyError())
+
+        XCTAssertTrue(capturedResult.isEmpty)
+    }
+
+    func test_validateCache_doesNotDeleteCacheOnExpiredTimestampAfterSUTInstanceDeallocated() {
+        let store = FeedStoreSpy()
+        let fixedCurrentDate = currentDate()
+        var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
+        let expiredTimestamp = fixedCurrentDate.adding(days: -7)
+
+        var capturedResult = [Error]()
+        sut?.validateCache { _ in }
+        sut = nil
+        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+
     //MARK: Helpers
     private func makeSUT(currentDate: @escaping () -> Date, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
