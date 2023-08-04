@@ -18,17 +18,3 @@ public protocol FeedStore {
     func save(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion)
     func load(completion: @escaping LoadCompletion)
 }
-
-public struct LocalFeedImage: Equatable {
-    public let id: UUID
-    public let description: String?
-    public let location: String?
-    public let imageURL: URL
-
-    public init(id: UUID, description: String?, location: String?, imageURL: URL) {
-        self.id = id
-        self.description = description
-        self.location = location
-        self.imageURL = imageURL
-    }
-}
