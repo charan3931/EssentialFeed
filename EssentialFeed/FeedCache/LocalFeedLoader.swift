@@ -34,7 +34,7 @@ public class LocalFeedLoader {
         })
     }
 
-    public func retrieve(completion: @escaping (LoadFeedResult) -> Void) {
+    public func load(completion: @escaping (LoadFeedResult) -> Void) {
         store.retrieve(completion: { [unowned self] result in
             switch result {
             case .success((let feedImages, let timestamp)):

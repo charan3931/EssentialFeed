@@ -19,7 +19,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
     func test_retrieve_messagesStoreToRetrieve() {
         let (sut, store) = makeSUT(currentDate: Date.init)
 
-        sut.retrieve() { _ in }
+        sut.load() { _ in }
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
@@ -88,7 +88,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
 
     private func expect(_ sut: LocalFeedLoader, with currentDate: Date,completeWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "wait for completion")
-        sut.retrieve() { receivedResult in
+        sut.load() { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedImages), .success(expectedImages)):
                 XCTAssertEqual(receivedImages, expectedImages, file: file, line: line)
