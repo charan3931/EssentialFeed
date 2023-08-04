@@ -10,9 +10,9 @@ import EssentialFeed
 
 class FeedStoreSpy: FeedStore {
     var receivedMessages = [ReceivedMessage]()
-    var deletionCompletion: DeleteCompletion!
+    var deletionCompletion: DeletionCompletion!
     var insertionCompletion: SaveCompletion!
-    var retrievalCompletion: LoadCompletion!
+    var retrievalCompletion: RetrievalCompletion!
 
     enum ReceivedMessage: Equatable {
         case deletion
@@ -20,7 +20,7 @@ class FeedStoreSpy: FeedStore {
         case retrieve
     }
 
-    func deleteCache(completion: @escaping DeleteCompletion) {
+    func deleteCache(completion: @escaping DeletionCompletion) {
         deletionCompletion = completion
         receivedMessages.append(.deletion)
     }
@@ -46,7 +46,7 @@ class FeedStoreSpy: FeedStore {
         insertionCompletion(nil)
     }
 
-    func load(completion: @escaping LoadCompletion) {
+    func retrieve(completion: @escaping RetrievalCompletion) {
         retrievalCompletion = completion
         receivedMessages.append(.retrieve)
     }
