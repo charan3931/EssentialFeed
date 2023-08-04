@@ -10,14 +10,14 @@ import XCTest
 
 final class CodableFeedStoreTests: XCTestCase {
 
-    override class func setUp() {
+    override func setUp() {
         super.setUp()
-        try? FileManager.default.removeItem(at: storeURL)
+        try? FileManager.default.removeItem(at: Self.storeURL)
     }
 
-    override class func tearDown() {
-        super.tearDown()
-        try? FileManager.default.removeItem(at: storeURL)
+    override func tearDown() {
+        super.setUp()
+        try? FileManager.default.removeItem(at: Self.storeURL)
     }
 
     static var storeURL: URL {
