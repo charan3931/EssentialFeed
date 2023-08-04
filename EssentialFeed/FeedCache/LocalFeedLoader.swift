@@ -37,17 +37,17 @@ public class LocalFeedLoader {
     public func retrieve(completion: @escaping (LoadFeedResult) -> Void) {
         store.retrieve(completion: { [unowned self] result in
             switch result {
-
             case .success((let feedImages, let timestamp)):
-                if self.isValid(timestamp, to: currentDate()) {
-                    completion(.success(feedImages.toModel()))
-                } else {
-                    completion(.success([]))
-                }
+                completion(get(feedImages: feedImages, timestamp: timestamp))
             case .failure(let error):
                 completion(.failure(error))
             }
         })
+    }
+
+    private func get(feedImages: [LocalFeedImage], timestamp: Date) -> LoadFeedResult {
+        let feedImages = self.isValid(timestamp, to: currentDate()) ? feedImages.toModel() : []
+        return .success(feedImages)
     }
 
     private func isValid(_ timestamp: Date, to currentDate: Date) -> Bool {
