@@ -12,14 +12,16 @@ final class CodableFeedStoreTests: XCTestCase {
 
     override class func setUp() {
         super.setUp()
-        let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appending(path: "image-feed.store")
         try? FileManager.default.removeItem(at: storeURL)
     }
 
     override class func tearDown() {
         super.tearDown()
-        let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appending(path: "image-feed.store")
         try? FileManager.default.removeItem(at: storeURL)
+    }
+
+    static var storeURL: URL {
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appending(path: "image-feed.store")
     }
 
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {

@@ -34,7 +34,11 @@ class CodableFeedStore {
             LocalFeedImage(id: id, description: description, location: location, imageURL: imageURL)
         }
     }
-    private let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appending(path: "image-feed.store")
+    private let storeURL: URL
+
+    init(storeURL: URL) {
+        self.storeURL = storeURL
+    }
 
     func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
         if let data = try? Data(contentsOf: storeURL), let localCacheFeed = try? JSONDecoder().decode(CacheFeed.self, from: data) {
