@@ -24,7 +24,6 @@ final class CodableFeedStoreTests: XCTestCase {
 
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
         let sut = CodableFeedStore()
-        let expectedResult = FeedStore.Result.success(nil)
 
         let exp = expectation(description: "wait for completion")
         sut.retrieve(completion: { result in
@@ -32,7 +31,7 @@ final class CodableFeedStoreTests: XCTestCase {
             case let .success(feedCache):
                 XCTAssertNil(feedCache)
             default:
-                XCTFail("expected \(expectedResult) but instead got \(result)")
+                XCTFail("expected success but instead got \(result)")
             }
             exp.fulfill()
         })

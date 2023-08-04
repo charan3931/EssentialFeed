@@ -23,6 +23,13 @@ class CodableFeedStore {
         let location: String?
         let imageURL: URL
 
+        init(from localFeedImage: LocalFeedImage) {
+            id = localFeedImage.id
+            description = localFeedImage.description
+            location = localFeedImage.location
+            imageURL = localFeedImage.imageURL
+        }
+
         var localFeedImage: LocalFeedImage {
             LocalFeedImage(id: id, description: description, location: location, imageURL: imageURL)
         }
@@ -38,16 +45,11 @@ class CodableFeedStore {
     }
 
     func save(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.SaveCompletion) {
-        guard let encoded = try? JSONEncoder().encode(CacheFeed(items: items.toCacheFeedImages(), timestamp: timestamp)), (try? encoded.write(to: storeURL)) != nil else {
+        let cacheFeed = CacheFeed(items: items.map { CacheFeedImage(from: $0) }, timestamp: timestamp)
+        guard let encoded = try? JSONEncoder().encode(cacheFeed), (try? encoded.write(to: storeURL)) != nil else {
             completion(nil)
             return
         }
         completion(nil)
-    }
-}
-
-private extension Array where Element == LocalFeedImage {
-    func toCacheFeedImages() -> [CodableFeedStore.CacheFeedImage] {
-        map { CodableFeedStore.CacheFeedImage(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
     }
 }
