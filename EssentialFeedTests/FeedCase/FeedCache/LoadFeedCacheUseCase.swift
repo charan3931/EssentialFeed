@@ -29,7 +29,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let expectedError = anyError()
 
-        expect(sut, with: currentDate(), completeWith: .failure(expectedError), when: {
+        expect(sut, completeWith: .failure(expectedError), when: {
             store.completeRetrieval(with: anyError())
         })
     }
@@ -38,8 +38,8 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let fixedCurrentDate = currentDate()
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
-        expect(sut, with: currentDate(), completeWith: .success([]), when: {
-            store.completeRetrievalSuccessful(with: [], timestamp: currentDate())
+        expect(sut, completeWith: .success([]), when: {
+            store.completeRetrievalSuccessfulWithEmptyFeed()
         })
     }
 
@@ -49,7 +49,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let feed = uniqueFeedImages()
         let validTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
 
-        expect(sut, with: fixedCurrentDate, completeWith: .success(feed.models), when: {
+        expect(sut, completeWith: .success(feed.models), when: {
             store.completeRetrievalSuccessful(with: feed.local, timestamp: validTimestamp)
         })
     }
@@ -59,7 +59,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let expiredTimestamp = fixedCurrentDate.adding(days: -7)
 
-        expect(sut, with: fixedCurrentDate, completeWith: .success([]), when: {
+        expect(sut, completeWith: .success([]), when: {
             store.completeRetrievalSuccessful(with: uniqueFeedImages().local, timestamp: expiredTimestamp)
         })
     }
@@ -69,7 +69,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let expiredTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
 
-        expect(sut, with: fixedCurrentDate, completeWith: .success([]), when: {
+        expect(sut, completeWith: .success([]), when: {
             store.completeRetrievalSuccessful(with: uniqueFeedImages().local, timestamp: expiredTimestamp)
         })
     }
@@ -115,7 +115,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         return (sut, store)
     }
 
-    private func expect(_ sut: LocalFeedLoader, with currentDate: Date,completeWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedLoader,completeWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "wait for completion")
         sut.load() { receivedResult in
             switch (receivedResult, expectedResult) {

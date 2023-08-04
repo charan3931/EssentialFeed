@@ -43,15 +43,15 @@ extension LocalFeedLoader {
             guard let self else { return }
             switch result {
             case let .success(localCacheFeed):
-                deleteCacheIfExpired(localCacheFeed.timestamp, completion: completion)
+                deleteCacheIfExpired(localCacheFeed, completion: completion)
             case .failure(let error):
                 completion(error)
             }
         }
     }
 
-    private func deleteCacheIfExpired(_ timestamp: Date, completion: @escaping (Error?) -> Void) {
-        if !CachePolicy.isValid(currentDate: currentDate, timestamp: timestamp) {
+    private func deleteCacheIfExpired(_ localCacheFeed: LocalCacheFeed?, completion: @escaping (Error?) -> Void) {
+        if let localCacheFeed, !CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp) {
             self.store.deleteCache(completion: { [weak self] error in
                 guard self != nil else { return }
                 completion(error)
@@ -66,16 +66,18 @@ extension LocalFeedLoader {
             guard let self else { return }
             switch result {
             case let .success(localCacheFeed):
-                completion(get(feedImages: localCacheFeed.items, timestamp: localCacheFeed.timestamp))
+                completion(getFeedImages(from: localCacheFeed))
             case .failure(let error):
                 completion(.failure(error))
             }
         })
     }
 
-    private func get(feedImages: [LocalFeedImage], timestamp: Date) -> LoadFeedResult {
-        let feedImages = CachePolicy.isValid(currentDate: currentDate, timestamp: timestamp) ? feedImages.toModel() : []
-        return .success(feedImages)
+    private func getFeedImages(from localCacheFeed: LocalCacheFeed?) -> LoadFeedResult {
+        if let localCacheFeed, CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp) {
+            return .success(localCacheFeed.items.toModel())
+        }
+        return .success([])
     }
 }
 
