@@ -34,6 +34,10 @@ public class LocalFeedLoader {
         })
     }
 
+    public func validateCache() {
+        store.retrieve() { _ in }
+    }
+
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
         store.retrieve(completion: { [weak self] result in
             guard let self else { return }

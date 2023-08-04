@@ -16,6 +16,14 @@ final class ValidateCacheUseCase: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [])
     }
 
+    func test_validateCache_messagesStoreToRetrieve() {
+        let (sut, store) = makeSUT(currentDate: Date.init)
+
+        sut.validateCache()
+
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+
     private func makeSUT(currentDate: @escaping () -> Date, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
         let sut = LocalFeedLoader(currentDate: currentDate, store: store)
