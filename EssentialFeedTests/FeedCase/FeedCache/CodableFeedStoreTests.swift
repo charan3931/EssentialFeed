@@ -62,7 +62,7 @@ final class CodableFeedStoreTests: XCTestCase {
         let sut = makeSUT()
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
-        let expectedFeedCache = LocalFeed(items: uniqueFeedImages, timestamp: timestamp)
+        let expectedLocalFeed = LocalFeed(items: uniqueFeedImages, timestamp: timestamp)
 
         let exp = expectation(description: "wait for completion")
         sut.save(uniqueFeedImages, timestamp: timestamp) { error in
@@ -70,10 +70,10 @@ final class CodableFeedStoreTests: XCTestCase {
 
             sut.retrieve(completion: { result in
                 switch result  {
-                case let .success(receivedFeedCache):
-                    XCTAssertEqual(receivedFeedCache, expectedFeedCache)
+                case let .success(receivedLocalFeed):
+                    XCTAssertEqual(receivedLocalFeed, expectedLocalFeed)
                 default:
-                    XCTFail("expected \(expectedFeedCache) but instead got \(result)")
+                    XCTFail("expected \(expectedLocalFeed) but instead got \(result)")
                 }
                 exp.fulfill()
             })
