@@ -10,10 +10,26 @@ import EssentialFeed
 
 class CodableFeedStore {
     func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
-
+        completion(.success(nil))
     }
 }
 
 final class CodableFeedStoreTests: XCTestCase {
 
+    func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
+        let sut = CodableFeedStore()
+        let expectedResult = FeedStore.Result.success(nil)
+
+        let exp = expectation(description: "wait for completion")
+        sut.retrieve(completion: { result in
+            switch result {
+            case let .success(feedCache):
+                XCTAssertNil(feedCache)
+            default:
+                XCTFail("expected \(expectedResult) but instead got \(result)")
+            }
+            exp.fulfill()
+        })
+        wait(for: [exp], timeout: 1.0)
+    }
 }
