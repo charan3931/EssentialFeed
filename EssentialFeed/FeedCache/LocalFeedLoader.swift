@@ -42,8 +42,8 @@ extension LocalFeedLoader {
         store.retrieve() { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success((_, let timestamp)):
-                deleteCacheIfExpired(timestamp, completion: completion)
+            case let .success(localCacheFeed):
+                deleteCacheIfExpired(localCacheFeed.timestamp, completion: completion)
             case .failure(let error):
                 completion(error)
             }
@@ -65,8 +65,8 @@ extension LocalFeedLoader {
         store.retrieve(completion: { [weak self] result in
             guard let self else { return }
             switch result {
-            case .success((let feedImages, let timestamp)):
-                completion(get(feedImages: feedImages, timestamp: timestamp))
+            case let .success(localCacheFeed):
+                completion(get(feedImages: localCacheFeed.items, timestamp: localCacheFeed.timestamp))
             case .failure(let error):
                 completion(.failure(error))
             }

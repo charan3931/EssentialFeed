@@ -20,3 +20,13 @@ public struct LocalFeedImage: Equatable {
         self.imageURL = imageURL
     }
 }
+
+public struct LocalCacheFeed {
+    public let items: [LocalFeedImage]
+    public let timestamp: Date
+
+    public init(items: [LocalFeedImage], timestamp: Date) {
+        self.items = items
+        self.timestamp = timestamp
+    }
+}
