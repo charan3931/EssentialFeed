@@ -91,6 +91,22 @@ final class LoadFeedCacheUseCase: XCTestCase {
         XCTAssertTrue(capturedResult.isEmpty)
     }
 
+    func test_save_doesNotDeliverFeedImagesOnSuccesfulLoadAfterSUTInstanceDeallocated() {
+        let store = FeedStoreSpy()
+        let fixedCurrentDate = currentDate()
+        var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
+
+        var capturedResult = [LoadFeedResult]()
+        sut?.load { result in
+            capturedResult.append(result)
+        }
+        sut = nil
+        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: fixedCurrentDate)
+
+        XCTAssertTrue(capturedResult.isEmpty)
+    }
+
+
     //MARK: Helpers
 
     private func makeSUT(currentDate: @escaping () -> Date, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
