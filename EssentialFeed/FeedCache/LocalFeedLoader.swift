@@ -34,8 +34,16 @@ public class LocalFeedLoader {
         })
     }
 
-    public func validateCache() {
-        store.retrieve() { _ in }
+    public func validateCache(completion: @escaping (Error?) -> Void) {
+        store.retrieve() { result in
+            switch result {
+
+            case .success((_,_)):
+                break
+            case .failure(let error):
+                completion(error)
+            }
+        }
     }
 
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
