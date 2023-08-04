@@ -7,15 +7,28 @@
 
 import Foundation
 
+struct CachePolicy {
+    static var maxAgeDays: Int { 7 }
+
+    private init() {}
+
+    static func isValid(currentDate: () -> Date, timestamp: Date) -> Bool {
+        let calendar = Calendar(identifier: .gregorian)
+        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxAgeDays, to: timestamp) else {
+            return false
+        }
+        return currentDate() < maxCacheAge
+    }
+}
+
 public final class LocalFeedLoader {
     private let store: FeedStore
-    private let currentDate: () -> Date
+    let currentDate: () -> Date
 
     public init(currentDate: @escaping () -> Date, store: FeedStore) {
         self.currentDate = currentDate
         self.store = store
     }
-
 }
 
 extension LocalFeedLoader {
@@ -44,7 +57,7 @@ extension LocalFeedLoader {
             guard let self else { return }
             switch result {
             case .success((_, let timestamp)):
-                if !isValid(timestamp) {
+                if !CachePolicy.isValid(currentDate: currentDate, timestamp: timestamp) {
                     self.store.deleteCache(completion: { [weak self] error in
                         guard self != nil else { return }
                         completion(error)
@@ -71,19 +84,9 @@ extension LocalFeedLoader {
     }
 
     private func get(feedImages: [LocalFeedImage], timestamp: Date) -> LoadFeedResult {
-        let feedImages = self.isValid(timestamp) ? feedImages.toModel() : []
+        let feedImages = CachePolicy.isValid(currentDate: currentDate, timestamp: timestamp) ? feedImages.toModel() : []
         return .success(feedImages)
     }
-
-    private func isValid(_ timestamp: Date) -> Bool {
-        let calendar = Calendar(identifier: .gregorian)
-        guard let maxCacheAge = calendar.date(byAdding: .day, value: maxAgeDays, to: timestamp) else {
-            return false
-        }
-        return currentDate() < maxCacheAge
-    }
-
-    private var maxAgeDays: Int { 7 }
 }
 
 
