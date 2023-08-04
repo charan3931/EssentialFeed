@@ -43,15 +43,19 @@ extension LocalFeedLoader {
             guard let self else { return }
             switch result {
             case .success((_, let timestamp)):
-                if !CachePolicy.isValid(currentDate: currentDate, timestamp: timestamp) {
-                    self.store.deleteCache(completion: { [weak self] error in
-                        guard self != nil else { return }
-                        completion(error)
-                    })
-                }
+                deleteCacheIfExpired(timestamp, completion: completion)
             case .failure(let error):
                 completion(error)
             }
+        }
+    }
+
+    private func deleteCacheIfExpired(_ timestamp: Date, completion: @escaping (Error?) -> Void) {
+        if !CachePolicy.isValid(currentDate: currentDate, timestamp: timestamp) {
+            self.store.deleteCache(completion: { [weak self] error in
+                guard self != nil else { return }
+                completion(error)
+            })
         }
     }
 }
