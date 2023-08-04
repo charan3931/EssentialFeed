@@ -9,6 +9,10 @@
     }
   ],
   "defaultOptions" : {
+    "addressSanitizer" : {
+      "detectStackUseAfterReturn" : true,
+      "enabled" : true
+    },
     "testExecutionOrdering" : "random"
   },
   "testTargets" : [

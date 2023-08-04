@@ -50,7 +50,7 @@ extension LocalFeedLoader {
         }
     }
 
-    private func deleteCacheIfExpired(_ localCacheFeed: LocalCacheFeed?, completion: @escaping (Error?) -> Void) {
+    private func deleteCacheIfExpired(_ localCacheFeed: LocalFeed?, completion: @escaping (Error?) -> Void) {
         if let localCacheFeed, !CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp) {
             self.store.deleteCache(completion: { [weak self] error in
                 guard self != nil else { return }
@@ -73,7 +73,7 @@ extension LocalFeedLoader {
         })
     }
 
-    private func getFeedImages(from localCacheFeed: LocalCacheFeed?) -> LoadFeedResult {
+    private func getFeedImages(from localCacheFeed: LocalFeed?) -> LoadFeedResult {
         if let localCacheFeed, CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp) {
             return .success(localCacheFeed.items.toModel())
         }

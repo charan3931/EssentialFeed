@@ -42,7 +42,7 @@ class CodableFeedStore {
 
     func retrieve(completion: @escaping FeedStore.RetrievalCompletion) {
         if let data = try? Data(contentsOf: storeURL), let localCacheFeed = try? JSONDecoder().decode(CacheFeed.self, from: data) {
-            completion(.success(LocalCacheFeed(items: localCacheFeed.localFeedImages, timestamp: localCacheFeed.timestamp)))
+            completion(.success(LocalFeed(items: localCacheFeed.localFeedImages, timestamp: localCacheFeed.timestamp)))
         } else {
             completion(.success(nil))
         }

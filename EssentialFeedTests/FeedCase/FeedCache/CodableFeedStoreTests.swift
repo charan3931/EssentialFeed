@@ -62,7 +62,7 @@ final class CodableFeedStoreTests: XCTestCase {
         let sut = makeSUT()
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
-        let expectedFeedCache = LocalCacheFeed(items: uniqueFeedImages, timestamp: timestamp)
+        let expectedFeedCache = LocalFeed(items: uniqueFeedImages, timestamp: timestamp)
 
         let exp = expectation(description: "wait for completion")
         sut.save(uniqueFeedImages, timestamp: timestamp) { error in

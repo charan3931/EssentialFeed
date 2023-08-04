@@ -21,7 +21,7 @@ public struct LocalFeedImage: Equatable, Codable {
     }
 }
 
-public struct LocalCacheFeed: Equatable {
+public struct LocalFeed: Equatable {
     public let items: [LocalFeedImage]
     public let timestamp: Date
 
