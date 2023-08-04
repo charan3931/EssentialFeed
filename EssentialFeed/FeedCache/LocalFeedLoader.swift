@@ -30,7 +30,7 @@ extension LocalFeedLoader {
     }
 
     private func cache(_ items: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        self.store.insert(items.toLocal(), timestamp: timestamp, completion: { [weak self] error in
+        self.store.save(items.toLocal(), timestamp: timestamp, completion: { [weak self] error in
             guard self != nil else { return }
             completion(error)
         })
@@ -39,7 +39,7 @@ extension LocalFeedLoader {
 extension LocalFeedLoader {
 
     public func validateCache(completion: @escaping (Error?) -> Void) {
-        store.retrieve() { [weak self] result in
+        store.load() { [weak self] result in
             guard let self else { return }
             switch result {
             case .success((_, let timestamp)):
@@ -62,7 +62,7 @@ extension LocalFeedLoader {
 
 extension LocalFeedLoader {
     public func load(completion: @escaping (LoadFeedResult) -> Void) {
-        store.retrieve(completion: { [weak self] result in
+        store.load(completion: { [weak self] result in
             guard let self else { return }
             switch result {
             case .success((let feedImages, let timestamp)):

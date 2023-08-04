@@ -8,15 +8,15 @@
 import Foundation
 
 public protocol FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias InsertionCompletion = (Error?) -> Void
-    typealias RetrievalCompletion = (Result) -> Void
+    typealias DeleteCompletion = (Error?) -> Void
+    typealias SaveCompletion = (Error?) -> Void
+    typealias LoadCompletion = (Result) -> Void
 
     typealias Result = Swift.Result<([LocalFeedImage], timestamp: Date), Error>
 
-    func deleteCache(completion: @escaping DeletionCompletion)
-    func insert(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion)
-    func retrieve(completion: @escaping RetrievalCompletion)
+    func deleteCache(completion: @escaping DeleteCompletion)
+    func save(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion)
+    func load(completion: @escaping LoadCompletion)
 }
 
 public struct LocalFeedImage: Equatable {
