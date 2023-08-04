@@ -34,6 +34,45 @@ final class ValidateCacheUseCase: XCTestCase {
         })
     }
 
+    func test_validateCache_doesNotDeleteCacheOnEmptyCache() {
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+
+        sut.validateCache() { _ in }
+        store.completeRetrievalSuccessful(with: [], timestamp: currentDate())
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+
+    func test_validateCache_doesNotDeleteCacheOnValidCache() {
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        let validTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
+
+        sut.validateCache() { _ in }
+        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: validTimestamp)
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
+
+    }
+
+    func test_validateCache_deletesCacheOnTimestampExpired() {
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        let expiredTimestamp = fixedCurrentDate.adding(days: -7)
+
+        sut.validateCache() { _ in }
+        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+        XCTAssertEqual(store.receivedMessages, [.retrieve, .deletion])
+    }
+
+    func test_validateCache_deletesCacheOnMoreThanExpiredTime() {
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        let expiredTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
+
+        sut.validateCache() { _ in }
+        store.completeRetrievalSuccessful(with: uniqueImageFeed().local, timestamp: expiredTimestamp)
+        XCTAssertEqual(store.receivedMessages, [.retrieve, .deletion])
+    }
 
     //MARK: Helpers
     private func makeSUT(currentDate: @escaping () -> Date, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
@@ -63,4 +102,29 @@ final class ValidateCacheUseCase: XCTestCase {
     private func currentDate() -> Date {
         Date()
     }
+    
+    private func uniqueImage() -> FeedImage {
+        return FeedImage(id: UUID(), description: "any", location: "any", imageURL: anyURL())
+    }
+
+    private func anyURL() -> URL {
+        URL(string: "https://any-url.com")!
+    }
+
+    private func uniqueImageFeed() -> (models: [FeedImage], local: [LocalFeedImage]) {
+        let models = [uniqueImage(), uniqueImage()]
+        let local = models.map { LocalFeedImage(id: $0.id, description: $0.description, location: $0.location, imageURL: $0.imageURL) }
+        return (models, local)
+    }
 }
+
+private extension Date {
+    func adding(days: Int) -> Date {
+        return Calendar(identifier: .gregorian).date(byAdding: .day, value: days, to: self)!
+    }
+
+    func adding(seconds: TimeInterval) -> Date {
+        return self + seconds
+    }
+}
+

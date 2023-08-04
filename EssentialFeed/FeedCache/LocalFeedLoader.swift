@@ -35,11 +35,13 @@ public class LocalFeedLoader {
     }
 
     public func validateCache(completion: @escaping (Error?) -> Void) {
-        store.retrieve() { result in
+        store.retrieve() { [unowned self] result in
             switch result {
 
-            case .success((_,_)):
-                break
+            case .success((_, let timestamp)):
+                if !isValid(timestamp) {
+                    self.store.deleteCache(completion: completion)
+                }
             case .failure(let error):
                 completion(error)
             }
@@ -59,16 +61,16 @@ public class LocalFeedLoader {
     }
 
     private func get(feedImages: [LocalFeedImage], timestamp: Date) -> LoadFeedResult {
-        let feedImages = self.isValid(timestamp, to: currentDate()) ? feedImages.toModel() : []
+        let feedImages = self.isValid(timestamp) ? feedImages.toModel() : []
         return .success(feedImages)
     }
 
-    private func isValid(_ timestamp: Date, to currentDate: Date) -> Bool {
+    private func isValid(_ timestamp: Date) -> Bool {
         let calendar = Calendar(identifier: .gregorian)
         guard let maxCacheAge = calendar.date(byAdding: .day, value: 7, to: timestamp) else {
             return false
         }
-        return currentDate < maxCacheAge
+        return currentDate() < maxCacheAge
     }
 }
 
