@@ -11,34 +11,35 @@ import EssentialFeed
 final class SaveFeedCacheUseCase: XCTestCase {
 
     func test_init_doesNotDeleteCache() {
-        let (_, store) = makeSUT()
+        let (_, store) = makeSUT(currentDate: Date.init)
 
         XCTAssertEqual(store.receivedMessages, [])
     }
 
     func test_save_doesNotInsertDataOnDeletionError() {
-        let (sut, store) = makeSUT()
-        let timestamp = Date()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
-        sut.save(items: uniqueFeedImages().models, timestamp: timestamp, completion: { _ in })
+        sut.save(items: uniqueFeedImages().models, completion: { _ in })
         store.completeDeletion(with: anyError())
 
         XCTAssertEqual(store.receivedMessages, [.deletion])
     }
 
     func test_save_insertFeedItemsWithTimeStampOnSuccessfulDeletion() {
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let items = uniqueFeedImages()
-        let timestamp = Date()
 
-        sut.save(items: items.models, timestamp: timestamp, completion: { _ in })
+        sut.save(items: items.models, completion: { _ in })
         store.completeDeletionSuccessfully()
 
-        XCTAssertEqual(store.receivedMessages, [.deletion, .insertion(items.local, timestamp)])
+        XCTAssertEqual(store.receivedMessages, [.deletion, .insertion(items.local, fixedCurrentDate)])
     }
 
     func test_save_deliveryErrorOnDeletionError() {
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let expectedError = anyError()
 
         expect(sut: sut, completeWithError: expectedError, when: {
@@ -47,7 +48,8 @@ final class SaveFeedCacheUseCase: XCTestCase {
     }
 
     func test_save_deliveryErrorOnInsertionError() {
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let expectedError = anyError()
 
         expect(sut: sut, completeWithError: expectedError, when: {
@@ -57,11 +59,11 @@ final class SaveFeedCacheUseCase: XCTestCase {
     }
 
     func test_save_deliversNoErrorOnSuccessfulInsertion() {
-        let (sut, store) = makeSUT()
-        let timestamp = Date()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         let exp = expectation(description: "wait for ccompletion")
-        sut.save(items: uniqueFeedImages().models, timestamp: timestamp) { receivedError in
+        sut.save(items: uniqueFeedImages().models) { receivedError in
             XCTAssertNil(receivedError)
             exp.fulfill()
         }
@@ -72,11 +74,11 @@ final class SaveFeedCacheUseCase: XCTestCase {
 
     func test_save_doesNotDeliverErrorOnDeletionErrorAfterSUTInstanceDeallocated() {
         let store = FeedStoreSpy()
-        var sut: LocalFeedLoader? = LocalFeedLoader(store: store)
-        let timestamp = Date()
+        let fixedCurrentDate = currentDate()
+        var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
 
         var capturedResult = [Error?]()
-        sut?.save(items: uniqueFeedImages().models, timestamp: timestamp) { receivedError in
+        sut?.save(items: uniqueFeedImages().models) { receivedError in
             capturedResult.append(receivedError)
         }
         sut = nil
@@ -87,11 +89,11 @@ final class SaveFeedCacheUseCase: XCTestCase {
 
     func test_save_doesNotDeliverErrorOnInsertionErrorAfterSUTInstanceDeallocated() {
         let store = FeedStoreSpy()
-        var sut: LocalFeedLoader? = LocalFeedLoader(store: store)
-        let timestamp = Date()
+        let fixedCurrentDate = currentDate()
+        var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
 
         var capturedResult = [Error?]()
-        sut?.save(items: uniqueFeedImages().models, timestamp: timestamp) { receivedError in
+        sut?.save(items: uniqueFeedImages().models) { receivedError in
             capturedResult.append(receivedError)
         }
         store.completeDeletionSuccessfully()
@@ -103,19 +105,17 @@ final class SaveFeedCacheUseCase: XCTestCase {
 
     //MARK: Helpers
 
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
+    private func makeSUT(currentDate: @escaping () -> Date, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
-        let sut = LocalFeedLoader(store: store)
+        let sut = LocalFeedLoader(currentDate: currentDate, store: store)
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
     }
 
     func expect(sut: LocalFeedLoader, completeWithError expectedError: NSError, when action: () -> Void) {
-        let timestamp = Date()
-
         let exp = expectation(description: "wait for ccompletion")
-        sut.save(items: uniqueFeedImages().models, timestamp: timestamp) { receivedError in
+        sut.save(items: uniqueFeedImages().models) { receivedError in
             XCTAssertEqual((receivedError! as NSError).code, expectedError.code)
             XCTAssertEqual((receivedError! as NSError).domain, expectedError.domain)
             exp.fulfill()
@@ -141,5 +141,9 @@ final class SaveFeedCacheUseCase: XCTestCase {
 
     private func anyError() -> NSError {
         NSError(domain: "any Error", code: 0)
+    }
+
+    private func currentDate() -> Date {
+        Date()
     }
 }

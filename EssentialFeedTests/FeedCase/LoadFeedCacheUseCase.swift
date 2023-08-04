@@ -11,21 +11,22 @@ import EssentialFeed
 final class LoadFeedCacheUseCase: XCTestCase {
 
     func test_init_doesNotMessagesStoreOnCreation() {
-        let (_, store) = makeSUT()
+        let (_, store) = makeSUT(currentDate: Date.init)
 
         XCTAssertEqual(store.receivedMessages, [])
     }
 
     func test_retrieve_messagesStoreToRetrieve() {
-        let (sut, store) = makeSUT()
+        let (sut, store) = makeSUT(currentDate: Date.init)
 
-        sut.retrieve(with: currentDate()) { _ in }
+        sut.retrieve() { _ in }
 
         XCTAssertEqual(store.receivedMessages, [.retrieve])
     }
 
     func test_retrieve_deliversErrorOnRetrievalError() {
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let expectedError = anyError()
 
         expect(sut, with: currentDate(), completeWith: .failure(expectedError), when: {
@@ -34,7 +35,8 @@ final class LoadFeedCacheUseCase: XCTestCase {
     }
 
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         expect(sut, with: currentDate(), completeWith: .success([]), when: {
             store.completeRetrievalSuccessful(with: [], timestamp: currentDate())
@@ -42,9 +44,9 @@ final class LoadFeedCacheUseCase: XCTestCase {
     }
 
     func test_load_deliversCachedImagesOnLessThanSevenDaysOldCache() {
-        let (sut, store) = makeSUT()
-        let feed = uniqueImageFeed()
         let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
+        let feed = uniqueImageFeed()
         let validTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: 1)
 
         expect(sut, with: fixedCurrentDate, completeWith: .success(feed.models), when: {
@@ -53,9 +55,9 @@ final class LoadFeedCacheUseCase: XCTestCase {
     }
 
     func test_load_deliversNoImagesOnTimestampExpired() {
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let feed = uniqueImageFeed()
-        let fixedCurrentDate = Date()
         let expiredTimestamp = fixedCurrentDate.adding(days: -7)
 
         expect(sut, with: fixedCurrentDate, completeWith: .success([]), when: {
@@ -64,9 +66,9 @@ final class LoadFeedCacheUseCase: XCTestCase {
     }
 
     func test_load_deliversNoImagesOnMoreThanExpiredTime() {
-        let (sut, store) = makeSUT()
+        let fixedCurrentDate = currentDate()
+        let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
         let feed = uniqueImageFeed()
-        let fixedCurrentDate = Date()
         let expiredTimestamp = fixedCurrentDate.adding(days: -7).adding(seconds: -1)
 
         expect(sut, with: fixedCurrentDate, completeWith: .success([]), when: {
@@ -76,9 +78,9 @@ final class LoadFeedCacheUseCase: XCTestCase {
 
     //MARK: Helpers
 
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
+    private func makeSUT(currentDate: @escaping () -> Date, file: StaticString = #filePath, line: UInt = #line) -> (sut: LocalFeedLoader, store: FeedStoreSpy) {
         let store = FeedStoreSpy()
-        let sut = LocalFeedLoader(store: store)
+        let sut = LocalFeedLoader(currentDate: currentDate, store: store)
         trackForMemoryLeaks(store, file: file, line: line)
         trackForMemoryLeaks(sut, file: file, line: line)
         return (sut, store)
@@ -86,7 +88,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
 
     private func expect(_ sut: LocalFeedLoader, with currentDate: Date,completeWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "wait for completion")
-        sut.retrieve(with: currentDate) { receivedResult in
+        sut.retrieve() { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedImages), .success(expectedImages)):
                 XCTAssertEqual(receivedImages, expectedImages, file: file, line: line)

@@ -9,18 +9,20 @@ import Foundation
 
 public class LocalFeedLoader {
     private let store: FeedStore
+    private let currentDate: () -> Date
 
-    public init(store: FeedStore) {
+    public init(currentDate: @escaping () -> Date, store: FeedStore) {
+        self.currentDate = currentDate
         self.store = store
     }
 
-    public func save(items: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
+    public func save(items: [FeedImage], completion: @escaping (Error?) -> Void) {
         store.deleteCache() { [weak self] error in
             guard let self else { return }
             if let error {
                 completion(error)
             } else {
-                cache(items, timestamp: timestamp, completion: completion)
+                cache(items, timestamp: currentDate(), completion: completion)
             }
         }
     }
@@ -32,12 +34,12 @@ public class LocalFeedLoader {
         })
     }
 
-    public func retrieve(with currentDate: Date, completion: @escaping (LoadFeedResult) -> Void) {
+    public func retrieve(completion: @escaping (LoadFeedResult) -> Void) {
         store.retrieve(completion: { [unowned self] result in
             switch result {
 
             case .success((let feedImages, let timestamp)):
-                if self.isValid(timestamp, to: currentDate) {
+                if self.isValid(timestamp, to: currentDate()) {
                     completion(.success(feedImages.toModel()))
                 } else {
                     completion(.success([]))
