@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CodableFeedStore {
+class CodableFeedStore: FeedStore {
     fileprivate struct CacheFeed: Codable {
         let items: [CacheFeedImage]
         let timestamp: Date
