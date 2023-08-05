@@ -58,7 +58,7 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
-    func test_retrieveAfterInsertingIntoEmptyCache_deliversInsertedFeedImages() {
+    func test_retrieve_deliversFeedImagesOnNonEmptyCache() {
         let sut = makeSUT()
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
@@ -81,6 +81,33 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
+    func test_retrieveTwice_deliversFeedImagesOnNonEmptyCache() {
+        let sut = makeSUT()
+        let uniqueFeedImages = uniqueFeedImages().local
+        let timestamp = currentDate()
+        let expectedLocalFeed = LocalFeed(items: uniqueFeedImages, timestamp: timestamp)
+
+        let exp = expectation(description: "wait for completion")
+        sut.save(uniqueFeedImages, timestamp: timestamp) { error in
+            XCTAssertNil(error, "expected feed to be inserted successfully")
+
+            sut.retrieve(completion: { firstResult in
+                sut.retrieve(completion: { secondResult in
+                    switch (firstResult, secondResult)  {
+                    case let (.success(firstFeedCache), .success(secondFeedCache)):
+                        XCTAssertEqual(firstFeedCache, expectedLocalFeed)
+                        XCTAssertEqual(secondFeedCache, expectedLocalFeed)
+                    default:
+                        XCTFail("expected empty cache on retrieval twice but instead got  \(firstResult) and \(secondResult)")
+                    }
+                    exp.fulfill()
+                })
+            })
+        }
+        wait(for: [exp], timeout: 1.0)
+    }
+
+    //MARK: Helpers
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
         let sut = CodableFeedStore(storeURL: Self.storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
