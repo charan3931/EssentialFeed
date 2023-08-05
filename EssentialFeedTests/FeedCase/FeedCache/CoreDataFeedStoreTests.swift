@@ -31,7 +31,11 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
         assert_retrieve_deliversEmptyFeedImagesOnEmptyCache(sut: sut)
     }
 
-    func test_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache() {}
+    func test_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache() {
+        let sut = CoreDataFeedStore()
+        
+        assert_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache(sut: sut)
+    }
 
     func test_retrieve_deliversFeedImagesOnNonEmptyCache() {}
 
