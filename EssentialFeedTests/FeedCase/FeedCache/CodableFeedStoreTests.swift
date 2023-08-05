@@ -21,7 +21,7 @@ final class CodableFeedStoreTests: XCTestCase {
     }
 
     static var storeURL: URL {
-        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appending(path: "image-feed.store")
+        return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appending(path: "\(type(of: self)).store")
     }
 
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
