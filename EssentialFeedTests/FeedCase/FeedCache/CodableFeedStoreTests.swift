@@ -20,7 +20,7 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
         try? FileManager.default.removeItem(at: storeURL)
     }
 
-    var storeURL: URL {
+    private var storeURL: URL {
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appending(path: "\(type(of: self)).store")
     }
 
