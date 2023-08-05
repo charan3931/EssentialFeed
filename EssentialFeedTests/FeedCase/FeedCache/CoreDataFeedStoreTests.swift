@@ -7,10 +7,29 @@
 
 import Foundation
 import XCTest
+import EssentialFeed
+
+class CoreDataFeedStore: FeedStore {
+    func deleteCache(completion: @escaping DeletionCompletion) {
+
+    }
+
+    func save(_ items: [EssentialFeed.LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion) {
+
+    }
+
+    func retrieve(completion: @escaping RetrievalCompletion) {
+        completion(.success(nil))
+    }
+}
 
 final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
 
-    func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {}
+    func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
+        let sut = CoreDataFeedStore()
+
+        assert_retrieve_deliversEmptyFeedImagesOnEmptyCache(sut: sut)
+    }
 
     func test_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache() {}
 
