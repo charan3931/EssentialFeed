@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import EssentialFeed 
+@testable import EssentialFeed
 
 final class CodableFeedStoreTests: XCTestCase {
 
@@ -97,7 +97,7 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success(nil))
     }
 
-    func test_delete_emptiesPreviousltInsertFeedImagesCache() {
+    func test_delete_emptiesPreviouslyInsertFeedImagesCache() {
         let sut = makeSUT()
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
