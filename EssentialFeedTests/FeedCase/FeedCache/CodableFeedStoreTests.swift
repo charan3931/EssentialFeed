@@ -110,7 +110,7 @@ final class CodableFeedStoreTests: XCTestCase {
     }
 
     func test_delete_deliversErrorOnPermissionError() {
-        let sut = makeSUT(storeURL: FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!)
+        let sut = makeSUT(storeURL: FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!)
 
         let deletionError = deleteCache(from: sut)
 
@@ -187,7 +187,7 @@ final class CodableFeedStoreTests: XCTestCase {
             deletionError = error
             exp.fulfill()
         }
-        wait(for: [exp], timeout: 1.0)
+        wait(for: [exp], timeout: 1)
         return deletionError
     }
 }
