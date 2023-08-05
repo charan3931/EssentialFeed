@@ -56,7 +56,18 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toInsert: uniqueFeedImages, timestamp)
         expect(sut, toRetrieve: .success(expectedLocalFeed))
         expect(sut, toRetrieve: .success(expectedLocalFeed))
+    }
 
+    func test_insert_overridesPreviousFeedWithNewFeed() {
+        let sut = makeSUT()
+        let uniqueFeedImages1 = uniqueFeedImages().local
+        let uniqueFeedImages2 = uniqueFeedImages().local
+        let timestamp = currentDate()
+        let expectedLocalFeed = LocalFeed(items: uniqueFeedImages2, timestamp: timestamp)
+
+        expect(sut, toInsert: uniqueFeedImages1, timestamp)
+        expect(sut, toInsert: uniqueFeedImages2, timestamp)
+        expect(sut, toRetrieve: .success(expectedLocalFeed))
     }
 
     //MARK: Helpers
