@@ -70,6 +70,16 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success(expectedLocalFeed))
     }
 
+    func test_insert_deliversErrorOnInsertionError() {
+        let invalidStoreURL = URL(string: "invalid://store-url")!
+        let sut = CodableFeedStore(storeURL: invalidStoreURL)
+        let uniqueFeedImages = uniqueFeedImages().local
+        let timestamp = currentDate()
+
+        let error = expect(sut, toInsert: uniqueFeedImages, timestamp)
+        XCTAssertNotNil(error, "expected an Error but instead got nil")
+    }
+
     //MARK: Helpers
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
         let sut = CodableFeedStore(storeURL: Self.storeURL)
@@ -92,12 +102,15 @@ final class CodableFeedStoreTests: XCTestCase {
         wait(for: [exp], timeout: 1.0)
     }
 
-    private func expect(_ sut: CodableFeedStore, toInsert uniqueFeedImages: [LocalFeedImage], _ timestamp: Date) {
+    @discardableResult
+    private func expect(_ sut: CodableFeedStore, toInsert uniqueFeedImages: [LocalFeedImage], _ timestamp: Date) -> Error? {
         let exp = expectation(description: "wait for completion")
+        var insertionError: Error?
         sut.save(uniqueFeedImages, timestamp: timestamp) { error in
-            XCTAssertNil(error, "expected feed to be inserted successfully")
+            insertionError = error
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
+        return insertionError
     }
 }

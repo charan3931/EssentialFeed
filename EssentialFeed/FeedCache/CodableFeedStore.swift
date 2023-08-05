@@ -50,10 +50,12 @@ class CodableFeedStore {
 
     func save(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping FeedStore.SaveCompletion) {
         let cacheFeed = CacheFeed(items: items.map { CacheFeedImage(from: $0) }, timestamp: timestamp)
-        guard let encoded = try? JSONEncoder().encode(cacheFeed), (try? encoded.write(to: storeURL)) != nil else {
+        do {
+            let encoded = try JSONEncoder().encode(cacheFeed)
+            try encoded.write(to: storeURL)
             completion(nil)
-            return
+        } catch {
+            completion(error)
         }
-        completion(nil)
     }
 }
