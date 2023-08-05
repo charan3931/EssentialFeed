@@ -47,6 +47,13 @@ final class CodableFeedStoreTests: XCTestCase {
         expect(sut, toRetrieve: .success(expectedLocalFeed))
     }
 
+    func test_retrieve_deliversErrorOnInvalidData() {
+        let sut = makeSUT()
+
+        try! "invalid data".write(to: Self.storeURL, atomically: false, encoding: .utf8)
+        expect(sut, toRetrieve: .failure(anyError()))
+    }
+
     func test_retrieveTwice_deliversFeedImagesOnNonEmptyCache() {
         let sut = makeSUT()
         let uniqueFeedImages = uniqueFeedImages().local
@@ -72,7 +79,7 @@ final class CodableFeedStoreTests: XCTestCase {
 
     func test_insert_deliversErrorOnInsertionError() {
         let invalidStoreURL = URL(string: "invalid://store-url")!
-        let sut = CodableFeedStore(storeURL: invalidStoreURL)
+        let sut = makeSUT(storeURL: invalidStoreURL)
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
 
@@ -81,8 +88,8 @@ final class CodableFeedStoreTests: XCTestCase {
     }
 
     //MARK: Helpers
-    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
-        let sut = CodableFeedStore(storeURL: Self.storeURL)
+    private func makeSUT(storeURL: URL? = nil, file: StaticString = #filePath, line: UInt = #line) -> CodableFeedStore {
+        let sut = CodableFeedStore(storeURL: storeURL ?? Self.storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
@@ -94,6 +101,8 @@ final class CodableFeedStoreTests: XCTestCase {
             switch (receivedResult, expectedResult)  {
             case let (.success(receivedLocalFeed), .success(expectedLocalFeed)):
                 XCTAssertEqual(receivedLocalFeed, expectedLocalFeed, file: file, line: line)
+            case (.failure, .failure):
+                break
             default:
                 XCTFail("expected \(expectedResult) but instead got \(receivedResult)", file: file, line: line)
             }
