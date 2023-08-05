@@ -17,10 +17,10 @@ protocol FeedStoreSpecs where Self: XCTestCase {
     func test_insert_deliversNoErrorOnNonEmptyCache()
     func test_insert_overridesPreviousFeedWithNewFeed()
 
-    func test_delete_hasNoSideEffectsOnEmptyCache()
+    func test_delete_emptiesPreviouslyInsertFeedImagesCache()
     func test_delete_deliverNoErrorOnEmptyCache()
     func test_delete_deliverNoErrorOnNonEmptyCache()
-    func test_delete_emptiesPreviouslyInsertFeedImagesCache()
+    func test_delete_hasNoSideEffectsOnEmptyCache()
 
     func test_sideEffects_runSeriallyToAvoidRaceConditions()
 }
