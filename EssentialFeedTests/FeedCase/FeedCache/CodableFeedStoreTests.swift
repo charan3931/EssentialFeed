@@ -24,6 +24,10 @@ final class CodableFeedStoreTests: XCTestCase {
         return FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appending(path: "\(type(of: self)).store")
     }
 
+    var testSpecificStoreURL: URL {
+        return FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!.appending(path: "\(type(of: self)).store")
+    }
+
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
         let sut = makeSUT()
 
@@ -85,6 +89,16 @@ final class CodableFeedStoreTests: XCTestCase {
 
         let error = expect(sut, toInsert: uniqueFeedImages, timestamp)
         XCTAssertNotNil(error, "expected an Error but instead got nil")
+    }
+
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+
+        sut.deleteCache(completion: { deletionError in
+            XCTAssertNil(deletionError, "Expected empty cache deletion to succeed")
+        })
+
+        expect(sut, toRetrieve: .success(nil))
     }
 
     //MARK: Helpers

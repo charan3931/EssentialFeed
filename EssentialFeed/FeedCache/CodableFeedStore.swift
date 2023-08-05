@@ -64,4 +64,8 @@ class CodableFeedStore {
             completion(error)
         }
     }
+
+    func deleteCache(completion: @escaping FeedStore.DeletionCompletion) {
+
+    }
 }
