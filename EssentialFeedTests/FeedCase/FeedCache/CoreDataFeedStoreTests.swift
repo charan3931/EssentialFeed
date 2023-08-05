@@ -26,14 +26,14 @@ class CoreDataFeedStore: FeedStore {
 final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
 
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
-        let sut = CoreDataFeedStore()
+        let sut = makeSUT()
 
         assert_retrieve_deliversEmptyFeedImagesOnEmptyCache(sut: sut)
     }
 
     func test_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache() {
-        let sut = CoreDataFeedStore()
-        
+        let sut = makeSUT()
+
         assert_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache(sut: sut)
     }
 
@@ -62,4 +62,8 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
     func test_delete_deliversErrorOnPermissionError() {}
 
     func test_sideEffects_runSeriallyToAvoidRaceConditions() {}
+
+    private func makeSUT() -> FeedStore {
+        return CoreDataFeedStore()
+    }
 }
