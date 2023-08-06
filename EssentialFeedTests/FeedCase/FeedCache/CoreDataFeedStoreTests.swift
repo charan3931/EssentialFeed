@@ -15,7 +15,7 @@ class CoreDataFeedStore: FeedStore {
     }
 
     func save(_ items: [EssentialFeed.LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion) {
-
+        completion(nil)
     }
 
     func retrieve(completion: @escaping RetrievalCompletion) {
@@ -43,7 +43,10 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
 
     func test_retrieveTwice_deliversFeedImagesOnNonEmptyCache() {}
 
-    func test_insert_deliversNoErrorOnEmptyCache() {}
+    func test_insert_deliversNoErrorOnEmptyCache() {
+        let sut = makeSUT()
+        assert_insert_deliversNoErrorOnEmptyCache(sut: sut)
+    }
 
     func test_insert_deliversNoErrorOnNonEmptyCache() {}
 
