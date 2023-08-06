@@ -8,30 +8,32 @@
 import Foundation
 import CoreData
 
-public class CoreDataFeedStore: FeedStore {
-
+public final class CoreDataFeedStore: FeedStore {
     private let coreDataStack: CoreDataStack
+    private var context: NSManagedObjectContext {
+        coreDataStack.managedContext
+    }
 
     public init(coreDataStack: CoreDataStack) {
         self.coreDataStack = coreDataStack
     }
 
     public func deleteCache(completion: @escaping DeletionCompletion) {
-        let fetchRequest = FeedDataModel.fetchRequest()
-
         do {
-            let fetchedObjects = try coreDataStack.managedContext.fetch(fetchRequest)
-            for object in fetchedObjects {
-                coreDataStack.managedContext.delete(object)
-            }
-            coreDataStack.saveContext()
+            try delete()
         } catch {
         }
         completion(nil)
     }
 
+    private func delete() throws {
+        let fetchedObjects = try context.fetch(FeedDataModel.fetchRequest())
+        fetchedObjects.forEach { context.delete($0) }
+        coreDataStack.saveContext()
+    }
+
     public func save(_ items: [EssentialFeed.LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion) {
-        _ = FeedDataModel.toFeedDataModel(feedImages: items, timeStamp: timestamp, context: coreDataStack.managedContext)
+        FeedDataModel.save(feedImages: items, timeStamp: timestamp, in: context)
         coreDataStack.saveContext()
         completion(nil)
     }
@@ -39,7 +41,7 @@ public class CoreDataFeedStore: FeedStore {
     public func retrieve(completion: @escaping RetrievalCompletion) {
         do {
             let asyncFetchRequest = asyncFetchRequest(completion: completion)
-            try coreDataStack.managedContext.execute(asyncFetchRequest)
+            try context.execute(asyncFetchRequest)
         } catch {
             completion(.failure(error))
         }
@@ -49,10 +51,8 @@ public class CoreDataFeedStore: FeedStore {
         let fetchRequest = FeedDataModel.fetchRequest()
 
         return NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { result in
-            guard let feedDataModel = result.finalResult else {
-                return completion(.success(nil))
-            }
-            completion(.success(feedDataModel.first?.toLocalFeed))
+            let localFeed = result.finalResult?.first?.toLocalFeed
+            completion(.success(localFeed))
         }
     }
 }
