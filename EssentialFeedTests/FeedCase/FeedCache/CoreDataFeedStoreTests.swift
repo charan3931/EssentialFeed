@@ -74,7 +74,10 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
 
     func test_delete_deliversErrorOnPermissionError() {}
 
-    func test_sideEffects_runSeriallyToAvoidRaceConditions() {}
+    func test_sideEffects_runSeriallyToAvoidRaceConditions() {
+        let sut = makeSUT()
+        assert_sideEffects_runSeriallyToAvoidRaceConditions(on: sut)
+    }
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> FeedStore {
         let bundle = Bundle(for: CoreDataFeedStore.self)
