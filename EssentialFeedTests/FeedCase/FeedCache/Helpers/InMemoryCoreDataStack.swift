@@ -10,7 +10,6 @@ import CoreData
 import EssentialFeed
 
 class InMemoryCoreDataStack: CoreDataStack {
-
     private let modelName: String
     private let bundle: Bundle
 
@@ -20,17 +19,10 @@ class InMemoryCoreDataStack: CoreDataStack {
     }
 
     lazy var persistentContainer: NSPersistentContainer = {
-
-
-        guard let model = bundle.url(forResource: modelName, withExtension: "momd").flatMap( { NSManagedObjectModel(contentsOf: $0) }) else {
-                fatalError("Error initializing mom from: \(bundle)")
-        }
-
-
         let description = NSPersistentStoreDescription()
         description.type = NSInMemoryStoreType
 
-        let container = NSPersistentContainer(name: modelName, managedObjectModel: model)
+        let container = NSPersistentContainer(name: modelName, managedObjectModel: getManagedObjectModel())
         container.persistentStoreDescriptions = [description]
 
         container.loadPersistentStores { _, error in
@@ -41,6 +33,13 @@ class InMemoryCoreDataStack: CoreDataStack {
 
         return container
     }()
+
+    private func getManagedObjectModel() -> NSManagedObjectModel {
+        guard let model = bundle.url(forResource: modelName, withExtension: "momd").flatMap( { NSManagedObjectModel(contentsOf: $0) }) else {
+                fatalError("Error initializing mom from: \(bundle)")
+        }
+        return model
+    }
 
     var managedContext: NSManagedObjectContext {
         return persistentContainer.viewContext
