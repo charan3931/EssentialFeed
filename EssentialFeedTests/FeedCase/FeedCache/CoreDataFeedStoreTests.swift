@@ -45,7 +45,10 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
         assert_insert_deliversNoErrorOnNonEmptyCache(on: sut)
     }
 
-    func test_insert_overridesPreviousFeedWithNewFeed() {}
+    func test_insert_overridesPreviousFeedWithNewFeed() {
+        let sut = makeSUT()
+        assert_insert_overridesPreviousFeedWithNewFeed(on: sut)
+    }
 
     func test_insert_deliversErrorOnInsertionError() {}
 
