@@ -17,6 +17,16 @@ public class CoreDataFeedStore: FeedStore {
     }
 
     public func deleteCache(completion: @escaping DeletionCompletion) {
+        let fetchRequest = FeedDataModel.fetchRequest()
+
+        do {
+            let fetchedObjects = try coreDataStack.managedContext.fetch(fetchRequest)
+            for object in fetchedObjects {
+                coreDataStack.managedContext.delete(object)
+            }
+            coreDataStack.saveContext()
+        } catch {
+        }
         completion(nil)
     }
 
