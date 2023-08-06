@@ -30,13 +30,17 @@ public final class CoreDataFeedStore: FeedStore {
     private func delete() throws {
         let fetchedObjects = try context.fetch(FeedDataModel.fetchRequest())
         fetchedObjects.forEach { context.delete($0) }
-        coreDataStack.saveContext()
+        try context.save()
     }
 
     public func save(_ items: [EssentialFeed.LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion) {
-        FeedDataModel.save(feedImages: items, timeStamp: timestamp, in: context)
-        coreDataStack.saveContext()
-        completion(nil)
+        do {
+            FeedDataModel.save(feedImages: items, timeStamp: timestamp, in: context)
+            try context.save()
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
 
     public func retrieve(completion: @escaping RetrievalCompletion) {

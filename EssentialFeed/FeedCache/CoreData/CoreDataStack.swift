@@ -11,16 +11,4 @@ import CoreData
 public protocol CoreDataStack {
     init(modelName: String, bundle: Bundle)
     var managedContext: NSManagedObjectContext { get }
-    func saveContext ()
-}
-
-extension CoreDataStack {
-    public func saveContext () {
-        guard managedContext.hasChanges else { return }
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Unresolved error \(error), \(error.userInfo)")
-        }
-    }
 }
