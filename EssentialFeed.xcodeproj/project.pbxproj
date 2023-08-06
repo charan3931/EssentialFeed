@@ -48,6 +48,7 @@
 		0AECCD072A7F9DBA0091BB1B /* FeedImageDataModel+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECCCFB2A7F782B0091BB1B /* FeedImageDataModel+CoreDataClass.swift */; };
 		0AECCD082A7F9DBD0091BB1B /* FeedImageDataModel+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECCCFC2A7F782B0091BB1B /* FeedImageDataModel+CoreDataProperties.swift */; };
 		0AECCD0A2A7FA3740091BB1B /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECCD092A7FA3740091BB1B /* CoreDataStack.swift */; };
+		0AECCD0C2A7FA4F80091BB1B /* InMemoryCoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AECCD0B2A7FA4F80091BB1B /* InMemoryCoreDataStack.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -110,6 +111,7 @@
 		0AECCCFC2A7F782B0091BB1B /* FeedImageDataModel+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FeedImageDataModel+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0AECCD022A7F9DA00091BB1B /* CoreDataFeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataFeedStore.swift; sourceTree = "<group>"; };
 		0AECCD092A7FA3740091BB1B /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		0AECCD0B2A7FA4F80091BB1B /* InMemoryCoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InMemoryCoreDataStack.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +151,7 @@
 				0AECCCD62A7EEF2E0091BB1B /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift */,
 				0AECCCD82A7EEF500091BB1B /* XCTestCase+FailableInsertFeedStoreSpecs.swift */,
 				0AECCCDA2A7EEF6B0091BB1B /* XCTestCase+FailableDeleteFeedStoreSpecs.swift */,
+				0AECCD0B2A7FA4F80091BB1B /* InMemoryCoreDataStack.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -469,6 +472,7 @@
 				0A0411732A7D398400442336 /* Feedcache+helpers.swift in Sources */,
 				0AECCCDD2A7EF3A70091BB1B /* CoreDataFeedStoreTests.swift in Sources */,
 				0AECCCD72A7EEF2E0091BB1B /* XCTestCase+FailableRetrieveFeedStoreSpecs.swift in Sources */,
+				0AECCD0C2A7FA4F80091BB1B /* InMemoryCoreDataStack.swift in Sources */,
 				0A7EDD882A764A760038D842 /* RemoteFeedLoaderTests.swift in Sources */,
 				0A0411752A7D39B200442336 /* Helpers.swift in Sources */,
 				0A7EDD762A7634970038D842 /* EssentialFeedTests.swift in Sources */,
