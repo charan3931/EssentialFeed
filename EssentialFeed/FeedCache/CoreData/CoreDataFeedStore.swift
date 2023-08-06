@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreData
 
 public class CoreDataFeedStore: FeedStore {
 
@@ -28,11 +29,17 @@ public class CoreDataFeedStore: FeedStore {
     public func retrieve(completion: @escaping RetrievalCompletion) {
         let fetchRequest = FeedDataModel.fetchRequest()
 
-        do {
-            let feedDataModel = try coreDataStack.managedContext.fetch(fetchRequest)
+        let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { result in
+            guard let feedDataModel = result.finalResult else {
+                return completion(.success(nil))
+            }
             completion(.success(feedDataModel.first?.toLocalFeed))
-        } catch {
+        }
 
+        do {
+            try coreDataStack.managedContext.execute(asyncFetchRequest)
+        } catch {
+            completion(.failure(error))
         }
     }
 }
