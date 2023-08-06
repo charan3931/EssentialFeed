@@ -17,7 +17,7 @@ public class CoreDataFeedStore: FeedStore {
     }
 
     public func deleteCache(completion: @escaping DeletionCompletion) {
-
+        completion(nil)
     }
 
     public func save(_ items: [EssentialFeed.LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion) {
