@@ -22,6 +22,7 @@ public final class CoreDataFeedStore: FeedStore {
         do {
             try delete()
         } catch {
+            completion(error)
         }
         completion(nil)
     }
