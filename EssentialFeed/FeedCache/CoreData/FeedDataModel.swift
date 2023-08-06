@@ -11,13 +11,12 @@ import CoreData
 
 @objc(FeedDataModel)
 public class FeedDataModel: NSManagedObject {
+    @NSManaged public var timestamp: Date
+    @NSManaged public var feedImages: NSOrderedSet
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<FeedDataModel> {
         return NSFetchRequest<FeedDataModel>(entityName: "FeedDataModel")
     }
-
-    @NSManaged public var timestamp: Date
-    @NSManaged public var feedImages: NSOrderedSet
 }
 
 extension FeedDataModel {
