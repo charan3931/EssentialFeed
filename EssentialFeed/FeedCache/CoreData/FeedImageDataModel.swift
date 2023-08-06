@@ -12,15 +12,15 @@ import CoreData
 @objc(FeedImageDataModel)
 public class FeedImageDataModel: NSManagedObject {
 
-    @NSManaged public var id: UUID
-    @NSManaged public var url: String
-    @NSManaged public var desc: String?
-    @NSManaged public var location: String?
-    @NSManaged public var feed: FeedDataModel?
+    @NSManaged var id: UUID
+    @NSManaged var url: String
+    @NSManaged var desc: String?
+    @NSManaged var location: String?
+    @NSManaged var feed: FeedDataModel?
 }
 
 extension FeedImageDataModel {
-    public class func toFeedImageDataModel(from feedImage: LocalFeedImage, context: NSManagedObjectContext) -> FeedImageDataModel {
+    class func toFeedImageDataModel(from feedImage: LocalFeedImage, context: NSManagedObjectContext) -> FeedImageDataModel {
         let dataModel = FeedImageDataModel(context: context)
         dataModel.id = feedImage.id
         dataModel.desc = feedImage.description
@@ -29,7 +29,7 @@ extension FeedImageDataModel {
         return dataModel
     }
 
-    public var toLocalFeedImage: LocalFeedImage {
+    var toLocalFeedImage: LocalFeedImage {
         return LocalFeedImage(id: id, description: desc, location: location, imageURL: URL(string: url)!)
     }
 }
