@@ -27,19 +27,22 @@ public class CoreDataFeedStore: FeedStore {
     }
 
     public func retrieve(completion: @escaping RetrievalCompletion) {
+        do {
+            let asyncFetchRequest = asyncFetchRequest(completion: completion)
+            try coreDataStack.managedContext.execute(asyncFetchRequest)
+        } catch {
+            completion(.failure(error))
+        }
+    }
+
+    private func asyncFetchRequest(completion: @escaping RetrievalCompletion) -> NSAsynchronousFetchRequest<FeedDataModel> {
         let fetchRequest = FeedDataModel.fetchRequest()
 
-        let asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { result in
+        return NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { result in
             guard let feedDataModel = result.finalResult else {
                 return completion(.success(nil))
             }
             completion(.success(feedDataModel.first?.toLocalFeed))
-        }
-
-        do {
-            try coreDataStack.managedContext.execute(asyncFetchRequest)
-        } catch {
-            completion(.failure(error))
         }
     }
 }
