@@ -9,17 +9,40 @@ import Foundation
 import XCTest
 import EssentialFeed
 
-class CoreDataFeedStore: FeedStore {
-    func deleteCache(completion: @escaping DeletionCompletion) {
+class InMemoryCoreDataStack: CoreDataStack {
 
+    private let modelName: String
+
+    required init(modelName: String) {
+        self.modelName = modelName
     }
 
-    func save(_ items: [EssentialFeed.LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion) {
-        completion(nil)
-    }
+    lazy var persistentContainer: NSPersistentContainer = {
 
-    func retrieve(completion: @escaping RetrievalCompletion) {
-        completion(.success(nil))
+        let bundle = Bundle(for: CoreDataFeedStore.self)
+
+        guard let model = bundle.url(forResource: modelName, withExtension: "momd").flatMap( { NSManagedObjectModel(contentsOf: $0) }) else {
+                fatalError("Error initializing mom from: \(bundle)")
+        }
+
+
+        let description = NSPersistentStoreDescription()
+        description.type = NSInMemoryStoreType
+
+        let container = NSPersistentContainer(name: modelName, managedObjectModel: model)
+        container.persistentStoreDescriptions = [description]
+
+        container.loadPersistentStores { _, error in
+            if let error = error {
+                fatalError("Failed to load in-memory CoreData store: \(error)")
+            }
+        }
+
+        return container
+    }()
+
+    var managedContext: NSManagedObjectContext {
+        return persistentContainer.viewContext
     }
 }
 
@@ -67,6 +90,6 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
     func test_sideEffects_runSeriallyToAvoidRaceConditions() {}
 
     private func makeSUT() -> FeedStore {
-        return CoreDataFeedStore()
+        return CoreDataFeedStore(coreDataStack: InMemoryCoreDataStack(modelName: "CoreDataFeed"))
     }
 }
