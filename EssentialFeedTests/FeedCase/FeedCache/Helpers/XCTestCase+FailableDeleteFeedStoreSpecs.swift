@@ -13,6 +13,6 @@ extension FailableDeleteFeedStoreSpecs {
     func assert_delete_deliversErrorOnPermissionError(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let deletionError = deleteCache(from: sut)
 
-        XCTAssertNotNil(deletionError, "Expected error while deletion but succeeded instead")
+        XCTAssertNotNil(deletionError, "Expected error while deletion but succeeded instead", file: file, line: line)
     }
 }

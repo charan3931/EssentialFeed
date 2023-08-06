@@ -16,6 +16,6 @@ extension FailableInsertFeedStoreSpecs {
 
         let error = save(feedImages: uniqueFeedImages, timestamp: timestamp, to: sut)
 
-        XCTAssertNotNil(error, "expected an Error but instead got nil")
+        XCTAssertNotNil(error, "expected an Error but instead got nil", file: file, line: line)
     }
 }
