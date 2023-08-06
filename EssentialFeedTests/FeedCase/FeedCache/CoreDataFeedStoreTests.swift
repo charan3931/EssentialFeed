@@ -52,7 +52,10 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
 
     func test_insert_deliversErrorOnInsertionError() {}
 
-    func test_delete_hasNoSideEffectsOnEmptyCache() {}
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+        assert_delete_hasNoSideEffectsOnEmptyCache(on: sut)
+    }
 
     func test_delete_deliverNoErrorOnEmptyCache() {}
 

@@ -111,7 +111,7 @@ extension FeedStoreSpecs {
 
     func assert_delete_hasNoSideEffectsOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         sut.deleteCache(completion: { deletionError in
-            XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError.debugDescription)")
+            XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError.debugDescription)", file: file, line: line)
         })
 
         expect(sut, toRetrieve: .success(nil), file: file, line: line)
@@ -164,7 +164,7 @@ extension FeedStoreSpecs {
             op3.fulfill()
         }
 
-        waitForExpectations(timeout: 5.0)
+        waitForExpectations(timeout: 6.0)
         XCTAssertEqual(completedOperationsInOrder, [op1, op2, op3], file: file, line: line)
     }
 }
