@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 public protocol CoreDataStack {
-    init(modelName: String)
+    init(modelName: String, bundle: Bundle)
     var managedContext: NSManagedObjectContext { get }
     func saveContext ()
 }

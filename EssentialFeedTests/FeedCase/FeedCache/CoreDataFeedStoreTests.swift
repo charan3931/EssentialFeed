@@ -53,6 +53,8 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
     func test_sideEffects_runSeriallyToAvoidRaceConditions() {}
 
     private func makeSUT() -> FeedStore {
-        return CoreDataFeedStore(coreDataStack: InMemoryCoreDataStack(modelName: "CoreDataFeed"))
+        let bundle = Bundle(for: CoreDataFeedStore.self)
+        let stack = InMemoryCoreDataStack(modelName: "CoreDataFeed", bundle: bundle)
+        return CoreDataFeedStore(coreDataStack: stack)
     }
 }

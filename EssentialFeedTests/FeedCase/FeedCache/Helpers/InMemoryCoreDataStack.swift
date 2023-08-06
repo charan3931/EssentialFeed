@@ -12,14 +12,15 @@ import EssentialFeed
 class InMemoryCoreDataStack: CoreDataStack {
 
     private let modelName: String
+    private let bundle: Bundle
 
-    required init(modelName: String) {
+    required init(modelName: String, bundle: Bundle) {
         self.modelName = modelName
+        self.bundle = bundle
     }
 
     lazy var persistentContainer: NSPersistentContainer = {
 
-        let bundle = Bundle(for: CoreDataFeedStore.self)
 
         guard let model = bundle.url(forResource: modelName, withExtension: "momd").flatMap( { NSManagedObjectModel(contentsOf: $0) }) else {
                 fatalError("Error initializing mom from: \(bundle)")
