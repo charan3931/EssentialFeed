@@ -12,6 +12,15 @@ import CoreData
 @objc(FeedDataModel)
 public class FeedDataModel: NSManagedObject {
 
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<FeedDataModel> {
+        return NSFetchRequest<FeedDataModel>(entityName: "FeedDataModel")
+    }
+
+    @NSManaged public var timestamp: Date
+    @NSManaged public var feedImages: NSOrderedSet
+}
+
+extension FeedDataModel {
     public class func save(feedImages: [LocalFeedImage], timeStamp: Date, in context: NSManagedObjectContext) {
         let feedImageDataModels = feedImages.map { FeedImageDataModel.toFeedImageDataModel(from: $0, context: context) }
         let feedDataModel = FeedDataModel(context: context)
@@ -26,3 +35,4 @@ public class FeedDataModel: NSManagedObject {
         return nil
     }
 }
+

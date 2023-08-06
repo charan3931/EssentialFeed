@@ -12,6 +12,14 @@ import CoreData
 @objc(FeedImageDataModel)
 public class FeedImageDataModel: NSManagedObject {
 
+    @NSManaged public var id: UUID
+    @NSManaged public var url: String
+    @NSManaged public var desc: String?
+    @NSManaged public var location: String?
+    @NSManaged public var feed: FeedDataModel?
+}
+
+extension FeedImageDataModel {
     public class func toFeedImageDataModel(from feedImage: LocalFeedImage, context: NSManagedObjectContext) -> FeedImageDataModel {
         let dataModel = FeedImageDataModel(context: context)
         dataModel.id = feedImage.id
