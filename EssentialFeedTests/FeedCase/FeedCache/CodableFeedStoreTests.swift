@@ -27,80 +27,80 @@ final class CodableFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
     func test_retrieve_deliversEmptyFeedImagesOnEmptyCache() {
         let sut = makeSUT()
 
-        assert_retrieve_deliversEmptyFeedImagesOnEmptyCache(sut: sut)
+        assert_retrieve_deliversEmptyFeedImagesOnEmptyCache(on: sut)
     }
 
     func test_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache() {
         let sut = makeSUT()
-        assert_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache(sut: sut)
+        assert_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache(on: sut)
     }
 
     func test_retrieve_deliversFeedImagesOnNonEmptyCache() {
         let sut = makeSUT()
-        assert_retrieve_deliversFeedImagesOnNonEmptyCache(sut: sut)
+        assert_retrieve_deliversFeedImagesOnNonEmptyCache(on: sut)
     }
 
     func test_retrieve_deliversErrorOnInvalidData() {
         let sut = makeSUT()
         try! "invalid data".write(to: storeURL, atomically: false, encoding: .utf8)
 
-        assert_retrieve_deliversErrorOnInvalidData(sut: sut)
+        assert_retrieve_deliversErrorOnInvalidData(on: sut)
     }
 
     func test_retrieveTwice_deliversFeedImagesOnNonEmptyCache() {
         let sut = makeSUT()
-        assert_retrieveTwice_deliversFeedImagesOnNonEmptyCache(sut: sut)
+        assert_retrieveTwice_deliversFeedImagesOnNonEmptyCache(on: sut)
     }
 
     func test_insert_deliversNoErrorOnEmptyCache() {
         let sut = makeSUT()
-        assert_insert_deliversNoErrorOnEmptyCache(sut: sut)
+        assert_insert_deliversNoErrorOnEmptyCache(on: sut)
     }
 
     func test_insert_deliversNoErrorOnNonEmptyCache() {
         let sut = makeSUT()
-        assert_insert_deliversNoErrorOnNonEmptyCache(sut: sut)
+        assert_insert_deliversNoErrorOnNonEmptyCache(on: sut)
     }
 
     func test_insert_overridesPreviousFeedWithNewFeed() {
         let sut = makeSUT()
-        assert_insert_overridesPreviousFeedWithNewFeed(sut: sut)
+        assert_insert_overridesPreviousFeedWithNewFeed(on: sut)
     }
 
     func test_insert_deliversErrorOnInsertionError() {
         let invalidStoreURL = URL(string: "invalid://store-url")!
         let sut = makeSUT(storeURL: invalidStoreURL)
-        assert_insert_deliversErrorOnInsertionError(sut: sut)
+        assert_insert_deliversErrorOnInsertionError(on: sut)
     }
 
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
-        assert_delete_hasNoSideEffectsOnEmptyCache(sut: sut)
+        assert_delete_hasNoSideEffectsOnEmptyCache(on: sut)
     }
 
     func test_delete_deliverNoErrorOnEmptyCache() {
         let sut = makeSUT()
-        assert_delete_deliverNoErrorOnEmptyCache(sut: sut)
+        assert_delete_deliverNoErrorOnEmptyCache(on: sut)
     }
 
     func test_delete_deliverNoErrorOnNonEmptyCache() {
         let sut = makeSUT()
-        assert_delete_deliverNoErrorOnNonEmptyCache(sut: sut)
+        assert_delete_deliverNoErrorOnNonEmptyCache(on: sut)
     }
 
     func test_delete_emptiesPreviouslyInsertFeedImagesCache() {
         let sut = makeSUT()
-        assert_delete_emptiesPreviouslyInsertFeedImagesCache(sut: sut)
+        assert_delete_emptiesPreviouslyInsertFeedImagesCache(on: sut)
     }
 
     func test_delete_deliversErrorOnPermissionError() {
         let sut = makeSUT(storeURL: FileManager.default.urls(for: .cachesDirectory, in: .systemDomainMask).first!)
-        assert_delete_deliversErrorOnPermissionError(sut: sut)
+        assert_delete_deliversErrorOnPermissionError(on: sut)
     }
 
     func test_sideEffects_runSeriallyToAvoidRaceConditions() {
         let sut = makeSUT()
-        assert_sideEffects_runSeriallyToAvoidRaceConditions(sut: sut)
+        assert_sideEffects_runSeriallyToAvoidRaceConditions(on: sut)
     }
 
     //MARK: Helpers

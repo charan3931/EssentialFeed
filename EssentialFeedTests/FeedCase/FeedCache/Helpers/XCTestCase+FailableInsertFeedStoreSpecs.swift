@@ -10,7 +10,7 @@ import EssentialFeed
 import XCTest
 
 extension FailableInsertFeedStoreSpecs {
-    func assert_insert_deliversErrorOnInsertionError(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_insert_deliversErrorOnInsertionError(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
 

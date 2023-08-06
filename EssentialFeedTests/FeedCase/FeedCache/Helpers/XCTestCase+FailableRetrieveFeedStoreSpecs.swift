@@ -9,7 +9,7 @@ import Foundation
 import EssentialFeed
 
 extension FailableRetrieveFeedStoreSpecs {
-    func assert_retrieve_deliversErrorOnInvalidData(sut: FeedStore,file: StaticString = #filePath, line: UInt = #line) {
+    func assert_retrieve_deliversErrorOnInvalidData(on sut: FeedStore,file: StaticString = #filePath, line: UInt = #line) {
         expect(sut, toRetrieve: .failure(anyError()))
     }
 }

@@ -10,7 +10,7 @@ import EssentialFeed
 import XCTest
 
 extension FailableDeleteFeedStoreSpecs {
-    func assert_delete_deliversErrorOnPermissionError(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_delete_deliversErrorOnPermissionError(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let deletionError = deleteCache(from: sut)
 
         XCTAssertNotNil(deletionError, "Expected error while deletion but succeeded instead")

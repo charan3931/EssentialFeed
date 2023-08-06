@@ -51,16 +51,16 @@ extension FeedStoreSpecs {
         return deletionError
     }
 
-    func assert_retrieve_deliversEmptyFeedImagesOnEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_retrieve_deliversEmptyFeedImagesOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         expect(sut, toRetrieve: .success(nil))
     }
 
-    func assert_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_retrieveTwice_deliversEmptyFeedImagesOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         expect(sut, toRetrieve: .success(nil))
         expect(sut, toRetrieve: .success(nil))
     }
 
-    func assert_retrieve_deliversFeedImagesOnNonEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_retrieve_deliversFeedImagesOnNonEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
         let expectedLocalFeed = LocalFeed(items: uniqueFeedImages, timestamp: timestamp)
@@ -70,7 +70,7 @@ extension FeedStoreSpecs {
         expect(sut, toRetrieve: .success(expectedLocalFeed))
     }
 
-    func assert_retrieveTwice_deliversFeedImagesOnNonEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_retrieveTwice_deliversFeedImagesOnNonEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
         let expectedLocalFeed = LocalFeed(items: uniqueFeedImages, timestamp: timestamp)
@@ -81,13 +81,13 @@ extension FeedStoreSpecs {
         expect(sut, toRetrieve: .success(expectedLocalFeed))
     }
 
-    func assert_insert_deliversNoErrorOnEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_insert_deliversNoErrorOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let deliveredError = save(feedImages: uniqueFeedImages().local, timestamp: currentDate(), to: sut)
 
         XCTAssertNil(deliveredError)
     }
 
-    func assert_insert_deliversNoErrorOnNonEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_insert_deliversNoErrorOnNonEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
 
@@ -97,7 +97,7 @@ extension FeedStoreSpecs {
         XCTAssertNil(deliveredError)
     }
 
-    func assert_insert_overridesPreviousFeedWithNewFeed(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_insert_overridesPreviousFeedWithNewFeed(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let uniqueFeedImages1 = uniqueFeedImages().local
         let uniqueFeedImages2 = uniqueFeedImages().local
         let timestamp = currentDate()
@@ -109,7 +109,7 @@ extension FeedStoreSpecs {
         expect(sut, toRetrieve: .success(expectedLocalFeed))
     }
 
-    func assert_delete_hasNoSideEffectsOnEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_delete_hasNoSideEffectsOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         sut.deleteCache(completion: { deletionError in
             XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError.debugDescription)")
         })
@@ -117,13 +117,13 @@ extension FeedStoreSpecs {
         expect(sut, toRetrieve: .success(nil))
     }
 
-    func assert_delete_deliverNoErrorOnEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_delete_deliverNoErrorOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         sut.deleteCache(completion: { deletionError in
             XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError.debugDescription)")
         })
     }
 
-    func assert_delete_deliverNoErrorOnNonEmptyCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_delete_deliverNoErrorOnNonEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
 
@@ -133,7 +133,7 @@ extension FeedStoreSpecs {
         XCTAssertNil(deletionError, "Expected empty cache deletion to succeed")
     }
 
-    func assert_delete_emptiesPreviouslyInsertFeedImagesCache(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_delete_emptiesPreviouslyInsertFeedImagesCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         let uniqueFeedImages = uniqueFeedImages().local
         let timestamp = currentDate()
 
@@ -143,7 +143,7 @@ extension FeedStoreSpecs {
         expect(sut, toRetrieve: .success(nil))
     }
 
-    func assert_sideEffects_runSeriallyToAvoidRaceConditions(sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
+    func assert_sideEffects_runSeriallyToAvoidRaceConditions(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
         var completedOperationsInOrder = [XCTestExpectation]()
 
         let op1 = expectation(description: "Operation 1")
