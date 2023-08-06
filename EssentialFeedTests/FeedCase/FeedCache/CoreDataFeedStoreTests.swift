@@ -52,9 +52,12 @@ final class CoreDataFeedStoreTests: XCTestCase, FailableFeedStoreSpec {
 
     func test_sideEffects_runSeriallyToAvoidRaceConditions() {}
 
-    private func makeSUT() -> FeedStore {
+    private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> FeedStore {
         let bundle = Bundle(for: CoreDataFeedStore.self)
         let stack = InMemoryCoreDataStack(modelName: "CoreDataFeed", bundle: bundle)
-        return CoreDataFeedStore(coreDataStack: stack)
+        let sut = CoreDataFeedStore(coreDataStack: stack)
+        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(stack, file: file, line: line)
+        return sut
     }
 }
