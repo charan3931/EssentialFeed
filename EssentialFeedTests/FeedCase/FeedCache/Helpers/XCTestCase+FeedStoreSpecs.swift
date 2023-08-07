@@ -9,7 +9,7 @@ import EssentialFeed
 import XCTest
 
 extension FeedStoreSpecs {
-    func expect(_ sut: FeedStore, toRetrieve expectedResult: FeedStore.Result, file: StaticString = #filePath, line: UInt = #line) {
+    func expect(_ sut: FeedStore, toRetrieve expectedResult: FeedStore.RetrievalResult, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "wait for completion")
 
         sut.retrieve(completion: { receivedResult in
