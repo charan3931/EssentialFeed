@@ -11,6 +11,8 @@ public final class LocalFeedLoader: FeedLoader {
     private let store: FeedStore
     let currentDate: () -> Date
 
+    public typealias Result = FeedLoader.Result
+
     public init(currentDate: @escaping () -> Date, store: FeedStore) {
         self.currentDate = currentDate
         self.store = store
@@ -61,7 +63,7 @@ extension LocalFeedLoader {
 }
 
 extension LocalFeedLoader {
-    public func load(completion: @escaping (LoadFeedResult) -> Void) {
+    public func load(completion: @escaping (Result) -> Void) {
         store.retrieve(completion: { [weak self] result in
             guard let self else { return }
             switch result {
@@ -73,7 +75,7 @@ extension LocalFeedLoader {
         })
     }
 
-    private func getFeedImages(from localCacheFeed: LocalFeed?) -> LoadFeedResult {
+    private func getFeedImages(from localCacheFeed: LocalFeed?) -> Result {
         if let localCacheFeed, CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp) {
             return .success(localCacheFeed.items.toModel())
         }

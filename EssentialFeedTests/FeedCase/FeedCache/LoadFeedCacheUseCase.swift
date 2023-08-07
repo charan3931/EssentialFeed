@@ -79,7 +79,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let fixedCurrentDate = currentDate()
         var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
 
-        var capturedResult = [LoadFeedResult]()
+        var capturedResult = [LocalFeedLoader.Result]()
         sut?.load { result in
             capturedResult.append(result)
         }
@@ -94,7 +94,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         let fixedCurrentDate = currentDate()
         var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
 
-        var capturedResult = [LoadFeedResult]()
+        var capturedResult = [LocalFeedLoader.Result]()
         sut?.load { result in
             capturedResult.append(result)
         }
@@ -115,7 +115,7 @@ final class LoadFeedCacheUseCase: XCTestCase {
         return (sut, store)
     }
 
-    private func expect(_ sut: LocalFeedLoader,completeWith expectedResult: LoadFeedResult, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
+    private func expect(_ sut: LocalFeedLoader,completeWith expectedResult: LocalFeedLoader.Result, when action: () -> Void, file: StaticString = #filePath, line: UInt = #line) {
         let exp = expectation(description: "wait for completion")
         sut.load() { receivedResult in
             switch (receivedResult, expectedResult) {
