@@ -30,8 +30,8 @@ extension FeedStoreSpecs {
     func save(feedImages uniqueFeedImages: [LocalFeedImage], timestamp: Date, to sut: FeedStore) -> Error? {
         let exp = expectation(description: "wait for completion")
         var insertionError: Error?
-        sut.save(uniqueFeedImages, timestamp: timestamp) { error in
-            insertionError = error
+        sut.save(uniqueFeedImages, timestamp: timestamp) { result in
+            if case let Result.failure(error) = result { insertionError = error }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1.0)
@@ -43,8 +43,8 @@ extension FeedStoreSpecs {
         let exp = expectation(description: "wait for completion")
 
         var deletionError: Error?
-        sut.deleteCache { error in
-            deletionError = error
+        sut.deleteCache { result in
+            if case let Result.failure(error) = result { deletionError = error }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)
@@ -110,16 +110,20 @@ extension FeedStoreSpecs {
     }
 
     func assert_delete_hasNoSideEffectsOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
-        sut.deleteCache(completion: { deletionError in
-            XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError.debugDescription)", file: file, line: line)
+        sut.deleteCache(completion: { result in
+            if case let Result.failure(deletionError) = result {
+                XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError)", file: file, line: line)
+            }
         })
 
         expect(sut, toRetrieve: .success(nil), file: file, line: line)
     }
 
     func assert_delete_deliverNoErrorOnEmptyCache(on sut: FeedStore, file: StaticString = #filePath, line: UInt = #line) {
-        sut.deleteCache(completion: { deletionError in
-            XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError.debugDescription)", file: file, line: line)
+        sut.deleteCache(completion: { result in
+            if case let Result.failure(deletionError) = result {
+                XCTAssertNil(deletionError, "Expected empty cache deletion to succeed but instead got \(deletionError)", file: file, line: line)
+            }
         })
     }
 

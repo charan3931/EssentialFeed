@@ -63,9 +63,9 @@ class CodableFeedStore: FeedStore {
             do {
                 let encoded = try JSONEncoder().encode(cacheFeed)
                 try encoded.write(to: storeURL)
-                completion(nil)
+                completion(.success(()))
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }
@@ -73,15 +73,15 @@ class CodableFeedStore: FeedStore {
     func deleteCache(completion: @escaping DeletionCompletion) {
         dispatchQueue.async(flags: .barrier) { [storeURL] in
             guard FileManager.default.fileExists(atPath: storeURL.path) else {
-                completion(nil)
+                completion((.success(())))
                 return
             }
 
             do {
                 try FileManager.default.removeItem(at: storeURL)
-                completion(nil)
+                completion((.success(())))
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

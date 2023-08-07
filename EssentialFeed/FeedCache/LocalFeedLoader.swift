@@ -11,8 +11,6 @@ public final class LocalFeedLoader: FeedLoader {
     private let store: FeedStore
     let currentDate: () -> Date
 
-    public typealias Result = FeedLoader.Result
-
     public init(currentDate: @escaping () -> Date, store: FeedStore) {
         self.currentDate = currentDate
         self.store = store
@@ -20,50 +18,49 @@ public final class LocalFeedLoader: FeedLoader {
 }
 
 extension LocalFeedLoader {
-    public func save(items: [FeedImage], completion: @escaping (Error?) -> Void) {
-        store.deleteCache() { [weak self] error in
+    public typealias SaveResult = Result<Void, Error>
+
+    public func save(items: [FeedImage], completion: @escaping (SaveResult) -> Void) {
+        store.deleteCache() { [weak self] deletionResult in
             guard let self else { return }
-            if let error {
-                completion(error)
-            } else {
+
+            switch deletionResult {
+            case .success:
                 cache(items, timestamp: currentDate(), completion: completion)
+            case let .failure(error):
+                completion(.failure(error))
             }
         }
     }
 
-    private func cache(_ items: [FeedImage], timestamp: Date, completion: @escaping (Error?) -> Void) {
-        self.store.save(items.toLocal(), timestamp: timestamp, completion: { [weak self] error in
+    private func cache(_ items: [FeedImage], timestamp: Date, completion: @escaping (SaveResult) -> Void) {
+        self.store.save(items.toLocal(), timestamp: timestamp, completion: { [weak self] saveResult in
             guard self != nil else { return }
-            completion(error)
+            completion(saveResult)
         })
     }
 }
 extension LocalFeedLoader {
 
-    public func validateCache(completion: @escaping (Error?) -> Void) {
+    public func validateCache() {
         store.retrieve() { [weak self] result in
             guard let self else { return }
             switch result {
-            case let .success(localCacheFeed):
-                deleteCacheIfExpired(localCacheFeed, completion: completion)
-            case .failure(let error):
-                completion(error)
+            case let .success(.some(localCacheFeed)) where !CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp):
+                self.store.deleteCache { _ in }
+            case .failure:
+                self.store.deleteCache { _ in }
+            case .success:
+                break
             }
-        }
-    }
-
-    private func deleteCacheIfExpired(_ localCacheFeed: LocalFeed?, completion: @escaping (Error?) -> Void) {
-        if let localCacheFeed, !CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp) {
-            self.store.deleteCache(completion: { [weak self] error in
-                guard self != nil else { return }
-                completion(error)
-            })
         }
     }
 }
 
 extension LocalFeedLoader {
-    public func load(completion: @escaping (Result) -> Void) {
+    public typealias LoadResult = FeedLoader.Result
+
+    public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve(completion: { [weak self] result in
             guard let self else { return }
             switch result {
@@ -75,7 +72,7 @@ extension LocalFeedLoader {
         })
     }
 
-    private func getFeedImages(from localCacheFeed: LocalFeed?) -> Result {
+    private func getFeedImages(from localCacheFeed: LocalFeed?) -> LoadResult {
         if let localCacheFeed, CachePolicy.isValid(currentDate: currentDate, timestamp: localCacheFeed.timestamp) {
             return .success(localCacheFeed.items.toModel())
         }

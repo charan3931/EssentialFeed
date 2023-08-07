@@ -63,8 +63,13 @@ final class SaveFeedCacheUseCase: XCTestCase {
         let (sut, store) = makeSUT(currentDate: { fixedCurrentDate })
 
         let exp = expectation(description: "wait for ccompletion")
-        sut.save(items: uniqueFeedImages().models) { receivedError in
-            XCTAssertNil(receivedError)
+        sut.save(items: uniqueFeedImages().models) { result in
+            switch result {
+            case .failure:
+                XCTFail("expected success but failed")
+            default:
+                break
+            }
             exp.fulfill()
         }
         store.completeDeletionSuccessfully()
@@ -78,8 +83,10 @@ final class SaveFeedCacheUseCase: XCTestCase {
         var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
 
         var capturedResult = [Error?]()
-        sut?.save(items: uniqueFeedImages().models) { receivedError in
-            capturedResult.append(receivedError)
+        sut?.save(items: uniqueFeedImages().models) { result in
+            if case let Result.failure(receivedError) = result {
+                capturedResult.append(receivedError)
+            }
         }
         sut = nil
         store.completeDeletion(with: anyError())
@@ -93,8 +100,10 @@ final class SaveFeedCacheUseCase: XCTestCase {
         var sut: LocalFeedLoader? = LocalFeedLoader(currentDate: { fixedCurrentDate }, store: store)
 
         var capturedResult = [Error?]()
-        sut?.save(items: uniqueFeedImages().models) { receivedError in
-            capturedResult.append(receivedError)
+        sut?.save(items: uniqueFeedImages().models) { result in
+            if case let Result.failure(receivedError) = result {
+                capturedResult.append(receivedError)
+            }
         }
         store.completeDeletionSuccessfully()
         sut = nil
@@ -115,9 +124,11 @@ final class SaveFeedCacheUseCase: XCTestCase {
 
     func expect(sut: LocalFeedLoader, completeWithError expectedError: NSError, when action: () -> Void) {
         let exp = expectation(description: "wait for ccompletion")
-        sut.save(items: uniqueFeedImages().models) { receivedError in
-            XCTAssertEqual((receivedError! as NSError).code, expectedError.code)
-            XCTAssertEqual((receivedError! as NSError).domain, expectedError.domain)
+        sut.save(items: uniqueFeedImages().models) { result in
+            if case let Result.failure(error) = result {
+                XCTAssertEqual((error as NSError).code, expectedError.code)
+                XCTAssertEqual((error as NSError).domain, expectedError.domain)
+            }
             exp.fulfill()
         }
         action()

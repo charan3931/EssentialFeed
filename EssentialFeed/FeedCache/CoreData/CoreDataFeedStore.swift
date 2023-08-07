@@ -22,9 +22,9 @@ public final class CoreDataFeedStore: FeedStore {
         do {
             try delete()
         } catch {
-            completion(error)
+            completion(.failure(error))
         }
-        completion(nil)
+        completion((.success(())))
     }
 
     private func delete() throws {
@@ -37,9 +37,9 @@ public final class CoreDataFeedStore: FeedStore {
         do {
             FeedDataModel.save(feedImages: items, timeStamp: timestamp, in: context)
             try context.save()
-            completion(nil)
+            completion(.success(()))
         } catch {
-            completion(error)
+            completion(.failure(error))
         }
     }
 

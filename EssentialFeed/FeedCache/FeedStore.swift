@@ -8,11 +8,14 @@
 import Foundation
 
 public protocol FeedStore {
-    typealias DeletionCompletion = (Error?) -> Void
-    typealias SaveCompletion = (Error?) -> Void
-
     typealias RetrievalResult = Swift.Result<LocalFeed?, Error>
     typealias RetrievalCompletion = (RetrievalResult) -> Void
+
+    typealias SaveResult = Swift.Result<Void, Error>
+    typealias SaveCompletion = (SaveResult) -> Void
+
+    typealias DeletionResult = Swift.Result<Void, Error>
+    typealias DeletionCompletion = (DeletionResult) -> Void
 
     func deleteCache(completion: @escaping DeletionCompletion)
     func save(_ items: [LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion)
