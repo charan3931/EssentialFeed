@@ -20,26 +20,20 @@ public final class CoreDataFeedStore: FeedStore {
 
     public func deleteCache(completion: @escaping DeletionCompletion) {
         do {
-            try delete()
-        } catch {
-            completion(.failure(error))
+            completion(Result { try delete() })
         }
-        completion((.success(())))
     }
 
     private func delete() throws {
-        let fetchedObjects = try context.fetch(FeedDataModel.fetchRequest())
-        fetchedObjects.forEach { context.delete($0) }
-        try context.save()
+        try context.fetch(FeedDataModel.fetchRequest()).map { context.delete($0) }.forEach(context.save)
     }
 
     public func save(_ items: [EssentialFeed.LocalFeedImage], timestamp: Date, completion: @escaping SaveCompletion) {
         do {
-            FeedDataModel.save(feedImages: items, timeStamp: timestamp, in: context)
-            try context.save()
-            completion(.success(()))
-        } catch {
-            completion(.failure(error))
+            completion(Result {
+                FeedDataModel.save(feedImages: items, timeStamp: timestamp, in: context)
+                try context.save()
+            })
         }
     }
 

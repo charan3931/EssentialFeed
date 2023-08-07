@@ -21,8 +21,9 @@ public class FeedDataModel: NSManagedObject {
 
 extension FeedDataModel {
     class func save(feedImages: [LocalFeedImage], timeStamp: Date, in context: NSManagedObjectContext) {
-        let feedImageDataModels = feedImages.map { FeedImageDataModel.toFeedImageDataModel(from: $0, context: context) }
         let feedDataModel = FeedDataModel(context: context)
+
+        let feedImageDataModels = feedImages.map { FeedImageDataModel.toFeedImageDataModel(from: $0, context: context) }
         feedDataModel.feedImages = NSOrderedSet(array: feedImageDataModels)
         feedDataModel.timestamp = timeStamp
     }
