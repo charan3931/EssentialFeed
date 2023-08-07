@@ -7,11 +7,7 @@
 
 import Foundation
 
-public enum HTTPClientResult {
-    case success(Data, HTTPURLResponse)
-    case failure(Error)
-}
-
 public protocol HTTPClient {
-    func get(from: URL, completion: @escaping (HTTPClientResult) -> Void)
+    typealias Result = Swift.Result<(Data, HTTPURLResponse), Error>
+    func get(from: URL, completion: @escaping (Result) -> Void)
 }
