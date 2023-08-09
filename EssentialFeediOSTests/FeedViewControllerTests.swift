@@ -8,7 +8,7 @@
 import XCTest
 import EssentialFeed
 
-class FeedViewController: UIViewController {
+class FeedViewController: UITableViewController {
     let loader: FeedLoader
 
     init(loader: FeedLoader) {
@@ -22,6 +22,13 @@ class FeedViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(load), for: .valueChanged)
+        load()
+    }
+
+    @objc private func load() {
         loader.load(completion: { _ in })
     }
 
@@ -43,12 +50,21 @@ final class FeedViewControllerTests: XCTestCase {
         XCTAssertEqual(loaderSpy.loadCallCount, 1)
     }
 
+    func test_pullTORefresh_loadsFeed() {
+        let (sut, loaderSpy) = makeSUT()
+        sut.loadViewIfNeeded()
+
+        sut.refreshControl?.simulatePullToRefresh()
+
+        XCTAssertEqual(loaderSpy.loadCallCount, 2)
+    }
+
     //MARK: Helpers
 
     private func makeSUT(file: StaticString = #filePath, line: UInt = #line) -> (sut: FeedViewController, loaderSpy: LoaderSpy) {
         let loaderSpy = LoaderSpy()
         let sut = FeedViewController(loader: loaderSpy)
-        
+
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(loaderSpy, file: file, line: line)
 
@@ -63,5 +79,15 @@ final class FeedViewControllerTests: XCTestCase {
             loadCallCount += 1
         }
 
+    }
+}
+
+private extension UIRefreshControl {
+    func simulatePullToRefresh() {
+        allTargets.forEach { target in
+            actions(forTarget: target, forControlEvent: .valueChanged)?.forEach {
+                (target as NSObject).perform(Selector($0))
+            }
+        }
     }
 }
