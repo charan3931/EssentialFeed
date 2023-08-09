@@ -21,6 +21,7 @@
 		0A4D2E042A7AC5CA008A9477 /* SaveFeedCacheUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4D2E032A7AC5CA008A9477 /* SaveFeedCacheUseCase.swift */; };
 		0A4D2E072A7B75C3008A9477 /* LocalFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4D2E062A7B75C3008A9477 /* LocalFeedLoader.swift */; };
 		0A4D2E092A7B76A6008A9477 /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4D2E082A7B76A6008A9477 /* FeedStore.swift */; };
+		0A6FA4412A839BA70007CBAA /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA4402A839BA70007CBAA /* FeedViewController.swift */; };
 		0A7EDD6B2A7634960038D842 /* EssentialFeed.docc in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD6A2A7634960038D842 /* EssentialFeed.docc */; };
 		0A7EDD712A7634970038D842 /* EssentialFeed.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7EDD662A7634960038D842 /* EssentialFeed.framework */; };
 		0A7EDD762A7634970038D842 /* EssentialFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A7EDD752A7634970038D842 /* EssentialFeedTests.swift */; };
@@ -116,6 +117,7 @@
 		0A4D2E062A7B75C3008A9477 /* LocalFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFeedLoader.swift; sourceTree = "<group>"; };
 		0A4D2E082A7B76A6008A9477 /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
 		0A6FA43F2A8381570007CBAA /* EssentialFeediOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialFeediOS.xctestplan; sourceTree = "<group>"; };
+		0A6FA4402A839BA70007CBAA /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
 		0A7EDD662A7634960038D842 /* EssentialFeed.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialFeed.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7EDD692A7634960038D842 /* EssentialFeed.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EssentialFeed.h; sourceTree = "<group>"; };
 		0A7EDD6A2A7634960038D842 /* EssentialFeed.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = EssentialFeed.docc; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 			children = (
 				0A91A53C2A8379DC00912806 /* EssentialFeediOS.h */,
 				0A91A53D2A8379DC00912806 /* EssentialFeediOS.docc */,
+				0A6FA4402A839BA70007CBAA /* FeedViewController.swift */,
 			);
 			path = EssentialFeediOS;
 			sourceTree = "<group>";
@@ -640,6 +643,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A6FA4412A839BA70007CBAA /* FeedViewController.swift in Sources */,
 				0A91A53E2A8379DC00912806 /* EssentialFeediOS.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -843,6 +847,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -878,6 +883,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1000,12 +1006,13 @@
 		0A91A54D2A8379DC00912806 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3V478SWB7K;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Charan.EssentialFeediOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1020,12 +1027,13 @@
 		0A91A54E2A8379DC00912806 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3V478SWB7K;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = Charan.EssentialFeediOSTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
