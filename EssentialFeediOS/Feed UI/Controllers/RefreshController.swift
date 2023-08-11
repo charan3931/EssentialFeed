@@ -6,16 +6,14 @@
 //
 
 import UIKit
-import EssentialFeed
 
 class RefreshController: NSObject {
 
-    private let feedLoader: FeedLoader
     let refreshControl: UIRefreshControl
-    var onRefreshCompletion: (([FeedImage]) -> Void)?
+    let viewModel: FeedLoaderViewModel
 
-    init(with feedLoader: FeedLoader) {
-        self.feedLoader = feedLoader
+    init(with viewModel: FeedLoaderViewModel) {
+        self.viewModel = viewModel
         self.refreshControl = UIRefreshControl()
 
         super.init()
@@ -25,12 +23,9 @@ class RefreshController: NSObject {
 
     @objc func load() {
         refreshControl.beginRefreshing()
-        feedLoader.load(completion: { [weak self] result in
-            if let feed = try? result.get() {
-                self?.onRefreshCompletion?(feed)
-            }
-            self?.refreshControl.endRefreshing()
-        })
+        viewModel.load() { [weak refreshControl] in
+            refreshControl?.endRefreshing()
+        }
     }
 
     required init?(coder: NSCoder) {
