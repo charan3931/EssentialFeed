@@ -44,7 +44,7 @@ class FeedImageCellController {
         viewModel.prefetchImage(url: cellModel.imageURL)
     }
 
-    func cancelTask(at indexPath: IndexPath) {
+    func cancelTask() {
         viewModel.cancelTask()
     }
 }

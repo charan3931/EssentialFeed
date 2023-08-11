@@ -55,6 +55,6 @@ public class FeedViewController: UITableViewController, UITableViewDataSourcePre
     }
 
     private func cancelTask(forRowAt indexPath: IndexPath) {
-        cellControllers[indexPath.row].cancelTask(at: indexPath)
+        cellControllers[indexPath.row].cancelTask()
     }
 }
