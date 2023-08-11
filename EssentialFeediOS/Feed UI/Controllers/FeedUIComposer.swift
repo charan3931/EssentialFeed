@@ -19,7 +19,10 @@ public class FeedUIComposer {
 
     private static func adaptFeedImagesToCellControllers(forwardingTo feedVC: FeedViewController, imageLoader: FeedImageDataLoader) -> (([FeedImage]) -> Void) {
         return { [weak feedVC] feedImages in
-            feedVC?.cellControllers = feedImages.map { FeedImageCellController(imageLoader: imageLoader, cellModel: $0) }
+            feedVC?.cellControllers = feedImages.map {
+                let viewModel = ImageLoaderViewModel(imageLoader: imageLoader)
+                return FeedImageCellController(viewModel: viewModel, cellModel: $0)
+            }
         }
     }
 }
