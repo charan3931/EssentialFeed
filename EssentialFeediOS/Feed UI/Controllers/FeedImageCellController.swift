@@ -9,14 +9,14 @@ import UIKit
 import EssentialFeed
 
 class FeedImageCellController {
+    private let imageLoader: FeedImageDataLoader
+    private let cellModel: FeedImage
+    private var tasks: FeedImageDataLoaderTask?
+
     init(imageLoader: FeedImageDataLoader, cellModel: FeedImage) {
         self.imageLoader = imageLoader
         self.cellModel = cellModel
     }
-
-    private let imageLoader: FeedImageDataLoader
-    private let cellModel: FeedImage
-    private var cancellableTask: FeedImageDataLoaderTask?
 
     func view() -> UITableViewCell {
         let cell = FeedImageCell()
@@ -30,7 +30,7 @@ class FeedImageCellController {
         let loadImage = { [weak self, weak cell] in
             guard let self = self else { return }
 
-            self.cancellableTask = self.imageLoader.loadImageData(from: cellModel.imageURL) { [weak cell] result in
+            self.tasks = self.imageLoader.loadImageData(from: cellModel.imageURL) { [weak cell] result in
                 let data = try? result.get()
                 let image = data.map(UIImage.init) ?? nil
                 cell?.feedImageView.image = image
@@ -43,15 +43,11 @@ class FeedImageCellController {
         return cell
     }
 
-    deinit {
-        cancelTask()
-    }
-
     func prefetchImage() {
-        self.cancellableTask = self.imageLoader.loadImageData(from: cellModel.imageURL) { _ in }
+        tasks = self.imageLoader.loadImageData(from: cellModel.imageURL) { _ in }
     }
 
-    func cancelTask() {
-        self.cancellableTask?.cancel()
+    func cancelTask(at indexPath: IndexPath) {
+        tasks?.cancel()
     }
 }
