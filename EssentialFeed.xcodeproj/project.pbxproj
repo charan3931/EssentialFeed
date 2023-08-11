@@ -299,7 +299,9 @@
 		0A6FA4492A83E5620007CBAA /* Feed UI */ = {
 			isa = PBXGroup;
 			children = (
+				0A6FA4502A864DCC0007CBAA /* FeedUIComposer.swift */,
 				0A6FA44B2A83E5920007CBAA /* Controllers */,
+				0A6FA4562A86A67D0007CBAA /* ViewModels */,
 				0A6FA44A2A83E5700007CBAA /* Views */,
 			);
 			path = "Feed UI";
@@ -320,11 +322,17 @@
 				0A6FA4402A839BA70007CBAA /* FeedViewController.swift */,
 				0A6FA44C2A862E110007CBAA /* RefreshController.swift */,
 				0A6FA44E2A862E560007CBAA /* FeedImageCellController.swift */,
-				0A6FA4502A864DCC0007CBAA /* FeedUIComposer.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		0A6FA4562A86A67D0007CBAA /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
 				0A6FA4522A866B0E0007CBAA /* FeedLoaderViewModel.swift */,
 				0A6FA4542A866DCC0007CBAA /* FeedImageViewModel.swift */,
 			);
-			path = Controllers;
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		0A7EDD5C2A7634960038D842 = {

@@ -18,16 +18,16 @@ public class FeedUIComposer {
         return feedVC
     }
 
-    fileprivate static func getCellController(feedImage: FeedImage, imageLoader: FeedImageDataLoader) -> FeedImageCellController {
-        let viewModel = FeedImageViewModel<UIImage>(model: feedImage, imageLoader: imageLoader, converter: { (data) in
-            data.map(UIImage.init) ?? nil
-        })
-        return FeedImageCellController(viewModel: viewModel)
-    }
-
     private static func adaptFeedImagesToCellControllers(forwardingTo feedVC: FeedViewController, imageLoader: FeedImageDataLoader) -> (([FeedImage]) -> Void) {
         return { [weak feedVC] feedImages in
-            feedVC?.cellControllers = feedImages.map{ getCellController(feedImage: $0, imageLoader: imageLoader) }
+            feedVC?.cellControllers = getCellControllers(feedImage: feedImages, imageLoader: imageLoader)
+        }
+    }
+
+    private static func getCellControllers(feedImage: [FeedImage], imageLoader: FeedImageDataLoader) -> [FeedImageCellController] {
+        feedImage.map { feedImage in
+            let viewModel = FeedImageViewModel(model: feedImage, imageLoader: imageLoader, converter: { $0.map(UIImage.init) ?? nil })
+            return FeedImageCellController(viewModel: viewModel)
         }
     }
 }
