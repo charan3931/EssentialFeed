@@ -10,9 +10,9 @@ import EssentialFeed
 
 class FeedImageCellController {
     private let cellModel: FeedImage
-    private let viewModel: ImageLoaderViewModel
+    private let viewModel: ImageLoaderViewModel<UIImage>
 
-    init(viewModel: ImageLoaderViewModel, cellModel: FeedImage) {
+    init(viewModel: ImageLoaderViewModel<UIImage>, cellModel: FeedImage) {
         self.viewModel = viewModel
         self.cellModel = cellModel
     }
