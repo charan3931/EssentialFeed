@@ -9,23 +9,24 @@ import UIKit
 
 class RefreshController: NSObject {
 
-    let refreshControl: UIRefreshControl
+    private(set) lazy var refreshControl: UIRefreshControl = bind(UIRefreshControl())
     let viewModel: FeedLoaderViewModel
 
     init(with viewModel: FeedLoaderViewModel) {
         self.viewModel = viewModel
-        self.refreshControl = UIRefreshControl()
-
         super.init()
-
-        refreshControl.addTarget(self, action: #selector(load), for: .valueChanged)
     }
 
     @objc func load() {
-        refreshControl.beginRefreshing()
-        viewModel.load() { [weak refreshControl] in
-            refreshControl?.endRefreshing()
+        viewModel.load()
+    }
+
+    private func bind(_ view: UIRefreshControl) -> UIRefreshControl {
+        view.addTarget(self, action: #selector(load), for: .valueChanged)
+        viewModel.onLoadingStateChange = { [weak view] isLoading in
+            isLoading ? view?.beginRefreshing() : view?.endRefreshing()
         }
+        return view
     }
 
     required init?(coder: NSCoder) {
