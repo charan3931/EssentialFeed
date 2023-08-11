@@ -7,9 +7,9 @@
 
 import EssentialFeed
 
-class FeedLoaderViewModel {
-    typealias Observer<T> = (T) -> Void
+typealias Observer<T> = (T) -> Void
 
+class FeedLoaderViewModel {
     private let feedLoader: FeedLoader
 
     var onFeedLoaded: Observer<[FeedImage]>?

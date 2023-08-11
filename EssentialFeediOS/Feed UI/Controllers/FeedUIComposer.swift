@@ -19,10 +19,10 @@ public class FeedUIComposer {
     }
 
     fileprivate static func getCellController(feedImage: FeedImage, imageLoader: FeedImageDataLoader) -> FeedImageCellController {
-        let viewModel = ImageLoaderViewModel<UIImage>(imageLoader: imageLoader, converter: { (data) in
+        let viewModel = FeedImageViewModel<UIImage>(model: feedImage, imageLoader: imageLoader, converter: { (data) in
             data.map(UIImage.init) ?? nil
         })
-        return FeedImageCellController(viewModel: viewModel, cellModel: feedImage)
+        return FeedImageCellController(viewModel: viewModel)
     }
 
     private static func adaptFeedImagesToCellControllers(forwardingTo feedVC: FeedViewController, imageLoader: FeedImageDataLoader) -> (([FeedImage]) -> Void) {
