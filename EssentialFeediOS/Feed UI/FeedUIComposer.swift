@@ -26,7 +26,7 @@ public class FeedUIComposer {
 
     private static func getCellControllers(feedImage: [FeedImage], imageLoader: FeedImageDataLoader) -> [FeedImageCellController] {
         feedImage.map { feedImage in
-            let viewModel = FeedImageViewModel(model: feedImage, imageLoader: imageLoader, converter: { $0.map(UIImage.init) ?? nil })
+            let viewModel = FeedImageViewModel(model: feedImage, imageLoader: imageLoader, imageTransformer: UIImage.init)
             return FeedImageCellController(viewModel: viewModel)
         }
     }

@@ -11,7 +11,7 @@ class FeedImageViewModel<Image> {
     private let model: FeedImage
     private let imageLoader: FeedImageDataLoader
     private var task: FeedImageDataLoaderTask?
-    private let converter: (Data) -> Image?
+    private let imageTransformer: (Data) -> Image?
 
     var onImageLoaded: Observer<Image>?
     var onImageLoadingStateChange: Observer<Bool>?
@@ -21,10 +21,10 @@ class FeedImageViewModel<Image> {
     var location: String? { model.location }
     var description: String? { model.description }
 
-    init(model: FeedImage,imageLoader: FeedImageDataLoader, converter: @escaping (Data?) -> Image?) {
+    init(model: FeedImage,imageLoader: FeedImageDataLoader, imageTransformer: @escaping (Data) -> Image?) {
         self.model = model
         self.imageLoader = imageLoader
-        self.converter = converter
+        self.imageTransformer = imageTransformer
     }
 
     func loadImage() {
@@ -36,7 +36,7 @@ class FeedImageViewModel<Image> {
     }
 
     private func handle(_ result: Result<Data, Error>) {
-        if let image = (try? result.get()).flatMap(converter) {
+        if let image = (try? result.get()).flatMap(imageTransformer) {
             self.onImageLoaded?(image)
         } else {
             onShouldRetryStateChange?(true)
