@@ -11,21 +11,28 @@ import UIKit
 
 public class FeedUIComposer {
     public static func getFeedViewController(feedLoader: FeedLoader, imageLoader: FeedImageDataLoader) -> FeedViewController {
-        let refreshViewModel = FeedLoaderViewModel(with: feedLoader)
-        let refreshVC = RefreshController(with: refreshViewModel)
+        let presenter = FeedPresenter(with: feedLoader)
+        let refreshVC = RefreshController(with: presenter)
+        presenter.feedLoadView = refreshVC
+
         let feedVC = FeedViewController(refreshVC: refreshVC)
-        refreshViewModel.onFeedLoaded = adaptFeedImagesToCellControllers(forwardingTo: feedVC, imageLoader: imageLoader)
+
+        presenter.feedView = AdapterFeedImageToCellController(feedVC: feedVC, imageLoader: imageLoader)
         return feedVC
     }
+}
 
-    private static func adaptFeedImagesToCellControllers(forwardingTo feedVC: FeedViewController, imageLoader: FeedImageDataLoader) -> (([FeedImage]) -> Void) {
-        return { [weak feedVC] feedImages in
-            feedVC?.cellControllers = getCellControllers(feedImage: feedImages, imageLoader: imageLoader)
-        }
+class AdapterFeedImageToCellController: FeedView {
+    private weak var feedVC: FeedViewController?
+    private let imageLoader: FeedImageDataLoader
+
+    init(feedVC: FeedViewController, imageLoader: FeedImageDataLoader) {
+        self.feedVC = feedVC
+        self.imageLoader = imageLoader
     }
 
-    private static func getCellControllers(feedImage: [FeedImage], imageLoader: FeedImageDataLoader) -> [FeedImageCellController] {
-        feedImage.map { feedImage in
+    func display(feed: [FeedImage]) {
+        feedVC?.cellControllers = feed.map { feedImage in
             let viewModel = FeedImageViewModel(model: feedImage, imageLoader: imageLoader, imageTransformer: UIImage.init)
             return FeedImageCellController(viewModel: viewModel)
         }
