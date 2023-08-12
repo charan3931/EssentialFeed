@@ -33,7 +33,7 @@ class RefreshController: NSObject {
 }
 
 extension RefreshController: FeedLoadView {
-    func display(isLoading: Bool) {
-        isLoading ? refreshControl.beginRefreshing() : refreshControl.endRefreshing()
+    func display(_ viewModel: FeedLoadViewModel) {
+        viewModel.isLoading ? refreshControl.beginRefreshing() : refreshControl.endRefreshing()
     }
 }
