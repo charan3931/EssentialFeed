@@ -20,5 +20,101 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6C959AEA-DA62-4D4A-A6F5-8E4D9ED4ACA9"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EssentialFeediOS/Feed UI/Controllers/FeedImageCellController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "37"
+            endingLineNumber = "37"
+            landmarkName = "display(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "6C959AEA-DA62-4D4A-A6F5-8E4D9ED4ACA9 - 4bdbe71371951497"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "EssentialFeediOS.FeedImageCellController.display(EssentialFeediOS.FeedImageViewModel&lt;__C.UIImage&gt;) -&gt; ()"
+                  moduleName = "EssentialFeediOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/saicharan/Project/EssentialFeed/EssentialFeediOS/Feed%20UI/Controllers/FeedImageCellController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "40">
+               </Location>
+               <Location
+                  uuid = "6C959AEA-DA62-4D4A-A6F5-8E4D9ED4ACA9 - 4bdbe71371951497"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "EssentialFeediOS.FeedImageCellController.display(EssentialFeediOS.FeedImageViewModel&lt;__C.UIImage&gt;) -&gt; ()"
+                  moduleName = "EssentialFeediOS"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/saicharan/Project/EssentialFeed/EssentialFeediOS/Feed%20UI/Controllers/FeedImageCellController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "37"
+                  endingLineNumber = "37"
+                  offsetFromSymbolStart = "44">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A3FB343B-B435-47B6-B33E-A04713A7DF0C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EssentialFeediOS/Feed UI/Controllers/FeedImageCellController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "view()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A128A201-7269-4A70-9528-EA6B0602433F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EssentialFeediOSTests/FeedViewControllerTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
+            landmarkName = "test_loadFeedCompletion_rendersSuccessfullyLoadedFeed()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F5FF3AE6-6DFF-4E05-83B5-61CB7D0D340D"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "EssentialFeediOS/Presentation/FeedImagePresenter.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "loadImage()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

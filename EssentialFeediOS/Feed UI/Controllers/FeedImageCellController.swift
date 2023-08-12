@@ -8,39 +8,18 @@
 import UIKit
 
 class FeedImageCellController {
-    private let viewModel: FeedImageViewModel<UIImage>
+    private let viewModel: FeedImagePresenter<FeedImageCellController, UIImage>
+    private var cell: FeedImageCell?
 
-    init(viewModel: FeedImageViewModel<UIImage>) {
+    init(viewModel: FeedImagePresenter<FeedImageCellController, UIImage>) {
         self.viewModel = viewModel
     }
 
     func view() -> UITableViewCell {
-        let cell = binded(FeedImageCell())
+        let cell = FeedImageCell()
+        cell.onRetry = viewModel.loadImage
+        self.cell = cell
         viewModel.loadImage()
-        return cell
-    }
-
-    private func binded(_ cell: FeedImageCell) -> FeedImageCell {
-        cell.locationContainer.isHidden = viewModel.hasLocation
-        cell.locationLabel.text = viewModel.location
-        cell.descriptionLabel.text = viewModel.description
-        cell.feedImageView.image = nil
-
-        viewModel.onImageLoaded = { [weak cell] image in
-            cell?.feedImageView.image = image
-        }
-
-        viewModel.onImageLoadingStateChange = { [weak cell] isLoading in
-            isLoading ? cell?.feedImageContainer.startShimmering() : cell?.feedImageContainer.stopShimmering()
-        }
-
-        viewModel.onShouldRetryStateChange = { [weak cell] shouldRetry in
-            cell?.feedImageRetryButton.isHidden = !shouldRetry
-        }
-
-        cell.onRetry = { [weak self] in
-            self?.viewModel.loadImage()
-        }
         return cell
     }
 
@@ -50,5 +29,18 @@ class FeedImageCellController {
 
     func cancelTask() {
         viewModel.cancelTask()
+    }
+}
+
+extension FeedImageCellController: FeedImageView {
+    func display(_ viewModel: FeedImageViewModel<UIImage>) {
+        cell?.locationContainer.isHidden = viewModel.location == nil
+        cell?.locationLabel.text = viewModel.location
+        cell?.descriptionLabel.text = viewModel.description
+        cell?.feedImageView.image = viewModel.image
+
+        cell?.feedImageRetryButton.isHidden = !viewModel.showRetry
+
+        viewModel.isLoading ? cell?.feedImageContainer.startShimmering() : cell?.feedImageContainer.stopShimmering()
     }
 }
