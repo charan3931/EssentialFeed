@@ -7,11 +7,17 @@
 
 import UIKit
 
+protocol FeedImageCellPresenter {
+    func loadImage()
+    func prefetchImage()
+    func cancelTask()
+}
+
 class FeedImageCellController {
-    private let viewModel: FeedImagePresenter<FeedImageCellController, UIImage>
+    private let viewModel: FeedImageCellPresenter
     private var cell: FeedImageCell?
 
-    init(viewModel: FeedImagePresenter<FeedImageCellController, UIImage>) {
+    init(viewModel: FeedImageCellPresenter) {
         self.viewModel = viewModel
     }
 

@@ -81,3 +81,5 @@ class FeedImagePresenter<View, Image> where View: FeedImageView, Image == View.I
         task?.cancel()
     }
 }
+
+extension FeedImagePresenter: FeedImageCellPresenter { }
