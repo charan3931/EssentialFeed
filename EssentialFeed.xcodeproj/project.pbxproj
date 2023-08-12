@@ -28,8 +28,6 @@
 		0A6FA44D2A862E110007CBAA /* RefreshController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA44C2A862E110007CBAA /* RefreshController.swift */; };
 		0A6FA44F2A862E560007CBAA /* FeedImageCellController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA44E2A862E560007CBAA /* FeedImageCellController.swift */; };
 		0A6FA4512A864DCC0007CBAA /* FeedUIComposer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA4502A864DCC0007CBAA /* FeedUIComposer.swift */; };
-		0A6FA4532A866B0E0007CBAA /* FeedLoaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA4522A866B0E0007CBAA /* FeedLoaderViewModel.swift */; };
-		0A6FA4552A866DCC0007CBAA /* FeedImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA4542A866DCC0007CBAA /* FeedImageViewModel.swift */; };
 		0A6FA4582A8793920007CBAA /* FeedPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA4572A8793920007CBAA /* FeedPresenter.swift */; };
 		0A6FA45C2A87A9360007CBAA /* FeedLoaderPresentationAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA45B2A87A9360007CBAA /* FeedLoaderPresentationAdapter.swift */; };
 		0A6FA45E2A87A98D0007CBAA /* FeedImagePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6FA45D2A87A98D0007CBAA /* FeedImagePresenter.swift */; };
@@ -135,8 +133,6 @@
 		0A6FA44C2A862E110007CBAA /* RefreshController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshController.swift; sourceTree = "<group>"; };
 		0A6FA44E2A862E560007CBAA /* FeedImageCellController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageCellController.swift; sourceTree = "<group>"; };
 		0A6FA4502A864DCC0007CBAA /* FeedUIComposer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedUIComposer.swift; sourceTree = "<group>"; };
-		0A6FA4522A866B0E0007CBAA /* FeedLoaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderViewModel.swift; sourceTree = "<group>"; };
-		0A6FA4542A866DCC0007CBAA /* FeedImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImageViewModel.swift; sourceTree = "<group>"; };
 		0A6FA4572A8793920007CBAA /* FeedPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedPresenter.swift; sourceTree = "<group>"; };
 		0A6FA45B2A87A9360007CBAA /* FeedLoaderPresentationAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoaderPresentationAdapter.swift; sourceTree = "<group>"; };
 		0A6FA45D2A87A98D0007CBAA /* FeedImagePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedImagePresenter.swift; sourceTree = "<group>"; };
@@ -307,7 +303,6 @@
 			children = (
 				0A6FA45A2A87A8C40007CBAA /* Composers */,
 				0A6FA44B2A83E5920007CBAA /* Controllers */,
-				0A6FA4562A86A67D0007CBAA /* ViewModels */,
 				0A6FA44A2A83E5700007CBAA /* Views */,
 			);
 			path = "Feed UI";
@@ -330,15 +325,6 @@
 				0A6FA44E2A862E560007CBAA /* FeedImageCellController.swift */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		0A6FA4562A86A67D0007CBAA /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				0A6FA4522A866B0E0007CBAA /* FeedLoaderViewModel.swift */,
-				0A6FA4542A866DCC0007CBAA /* FeedImageViewModel.swift */,
-			);
-			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		0A6FA4592A87A8870007CBAA /* Presentation */ = {
@@ -740,8 +726,6 @@
 				0A6FA44F2A862E560007CBAA /* FeedImageCellController.swift in Sources */,
 				0A6FA45C2A87A9360007CBAA /* FeedLoaderPresentationAdapter.swift in Sources */,
 				0A6FA44D2A862E110007CBAA /* RefreshController.swift in Sources */,
-				0A6FA4532A866B0E0007CBAA /* FeedLoaderViewModel.swift in Sources */,
-				0A6FA4552A866DCC0007CBAA /* FeedImageViewModel.swift in Sources */,
 				0A6FA45E2A87A98D0007CBAA /* FeedImagePresenter.swift in Sources */,
 				0A6FA4432A83B2090007CBAA /* FeedImageCell.swift in Sources */,
 				0A91A53E2A8379DC00912806 /* EssentialFeediOS.docc in Sources */,

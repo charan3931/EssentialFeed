@@ -8,45 +8,42 @@
 import UIKit
 
 protocol FeedImageCellPresenter {
-    func loadImage()
+    func didRequestImage()
     func prefetchImage()
-    func cancelTask()
+    func didCancelImageRequest()
 }
 
 class FeedImageCellController {
-    private let viewModel: FeedImageCellPresenter
-    private var cell: FeedImageCell?
+    private let delegate: FeedImageCellPresenter
+    private lazy var cell: FeedImageCell = FeedImageCell()
 
-    init(viewModel: FeedImageCellPresenter) {
-        self.viewModel = viewModel
+    init(delegate: FeedImageCellPresenter) {
+        self.delegate = delegate
     }
 
     func view() -> UITableViewCell {
-        let cell = FeedImageCell()
-        cell.onRetry = viewModel.loadImage
-        self.cell = cell
-        viewModel.loadImage()
+        delegate.didRequestImage()
         return cell
     }
 
     func prefetchImage() {
-        viewModel.prefetchImage()
+        delegate.prefetchImage()
     }
 
     func cancelTask() {
-        viewModel.cancelTask()
+        delegate.didCancelImageRequest()
     }
 }
 
 extension FeedImageCellController: FeedImageView {
     func display(_ viewModel: FeedImageViewModel<UIImage>) {
-        cell?.locationContainer.isHidden = viewModel.location == nil
-        cell?.locationLabel.text = viewModel.location
-        cell?.descriptionLabel.text = viewModel.description
-        cell?.feedImageView.image = viewModel.image
+        cell.locationContainer.isHidden = viewModel.location == nil
+        cell.locationLabel.text = viewModel.location
+        cell.descriptionLabel.text = viewModel.description
+        cell.feedImageView.image = viewModel.image
+        cell.feedImageRetryButton.isHidden = !viewModel.showRetry
+        cell.onRetry = delegate.didRequestImage
 
-        cell?.feedImageRetryButton.isHidden = !viewModel.showRetry
-
-        viewModel.isLoading ? cell?.feedImageContainer.startShimmering() : cell?.feedImageContainer.stopShimmering()
+        viewModel.isLoading ? cell.feedImageContainer.startShimmering() : cell.feedImageContainer.stopShimmering()
     }
 }
