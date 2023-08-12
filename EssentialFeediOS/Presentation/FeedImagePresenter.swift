@@ -15,7 +15,7 @@ struct FeedImageViewModel<Image> {
     var isLoading: Bool
 }
 
-protocol FeedImageView<Image>: AnyObject {
+protocol FeedImageView<Image> {
     associatedtype Image
     func display(_ viewModel: FeedImageViewModel<Image>)
 }
@@ -26,7 +26,7 @@ class FeedImagePresenter<View, Image> where View: FeedImageView, Image == View.I
     private var task: FeedImageDataLoaderTask?
     private let imageTransformer: (Data) -> Image?
 
-    weak var view: View?
+    var view: View?
 
     init(model: FeedImage, imageLoader: FeedImageDataLoader, imageTransformer: @escaping (Data) -> Image?) {
         self.model = model
