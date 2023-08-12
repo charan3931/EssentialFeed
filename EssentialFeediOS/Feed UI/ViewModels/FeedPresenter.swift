@@ -43,7 +43,7 @@ class FeedPresenter {
     }
 }
 
-class FeedLoaderPresentationAdapter {
+class FeedLoaderPresentationAdapter: RefreshControllerDelegate {
     private let feedLoader: FeedLoader
     private let presenter: FeedPresenter
 
@@ -52,7 +52,7 @@ class FeedLoaderPresentationAdapter {
         self.presenter = presenter
     }
 
-    func load() {
+    func didRequestFeedRefresh() {
         presenter.didStartLoading()
         feedLoader.load(completion: { [weak self] result in
             switch result {

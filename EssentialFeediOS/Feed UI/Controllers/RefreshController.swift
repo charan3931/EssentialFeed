@@ -7,19 +7,23 @@
 
 import UIKit
 
+protocol RefreshControllerDelegate {
+    func didRequestFeedRefresh()
+}
+
 class RefreshController: NSObject {
 
     private(set) lazy var refreshControl = getRefreshControl()
 
-    private var loadFeed: () -> Void
+    private var delegate: RefreshControllerDelegate
 
-    init(with loadFeed: @escaping () -> Void) {
-        self.loadFeed = loadFeed
+    init(with delegate: RefreshControllerDelegate) {
+        self.delegate = delegate
         super.init()
     }
 
     @objc func load() {
-        loadFeed()
+        delegate.didRequestFeedRefresh()
     }
 
     private func getRefreshControl() -> UIRefreshControl {
